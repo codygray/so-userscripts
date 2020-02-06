@@ -10,6 +10,9 @@
 // @exclude      https://stackoverflow.com/c/*
 // ==/UserScript==
 
+// Credit goes to fellow moderator Samuel Liew, on whose prior work
+// (https://github.com/samliew/so-mod-userscripts) much of this code is based.
+
 (function() {
     'use strict';
 
