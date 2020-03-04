@@ -112,7 +112,6 @@
   position: sticky;
   top: 0;
 }
-
 #nuke-actions .nuke-button {
   display: inline;
   margin: 0 0.5em 0 0;
@@ -133,19 +132,19 @@
 
         const nukeActions = $(`<div class="grid--cell ws-nowrap mb8" id="nuke-actions"><span class="fc-light mr2">Nuke As:&nbsp;</span>
                               ${!isMeta ?
-    `<a class="nuke-button ws-nowrap s-btn s-btn__danger s-btn__outlined" data-reason="OffTopic" data-reasonid="4" title="General computer usage (e.g., Super User)" href="#">User</a>
-     <a class="nuke-button ws-nowrap s-btn s-btn__danger s-btn__outlined" data-reason="OffTopic" data-reasonid="7" title="Professional server administration (e.g., Server Fault)" href="#">Server</a>
-     <a class="nuke-button ws-nowrap s-btn s-btn__danger s-btn__outlined" data-reason="OffTopic" data-reasonid="3" data-reasontext="This question does not appear to be about programming within the scope defined in the [help]." title="General off-topic" href="#">Off-Topic</a>
-     <a class="nuke-button ws-nowrap s-btn s-btn__danger s-btn__outlined" data-reason="OffTopic" data-reasonid="16" title="Soliciting recommendations for off-site resources" href="#">Recommend</a>`
+    `<a class="nuke-button ws-nowrap s-btn s-btn__danger s-btn__outlined" data-reason="OffTopic" data-reasonid="4" title="General computer usage (e.g., Super User)" href="javascript:void(0);">User</a>
+     <a class="nuke-button ws-nowrap s-btn s-btn__danger s-btn__outlined" data-reason="OffTopic" data-reasonid="7" title="Professional server administration (e.g., Server Fault)" href="javascript:void(0);">Server</a>
+     <a class="nuke-button ws-nowrap s-btn s-btn__danger s-btn__outlined" data-reason="OffTopic" data-reasonid="3" data-reasontext="This question does not appear to be about programming within the scope defined in the [help]." title="General off-topic" href="javascript:void(0);">Off-Topic</a>
+     <a class="nuke-button ws-nowrap s-btn s-btn__danger s-btn__outlined" data-reason="OffTopic" data-reasonid="16" title="Soliciting recommendations for off-site resources" href="javascript:void(0);">Recommend</a>`
                               :
-    `<a class="nuke-button ws-nowrap s-btn s-btn__danger s-btn__outlined" data-reason="OffTopic" data-reasonid="6" title="Not about Stack Overflow or the Stack Exchange network" href="#">Not Meta</a>
-     <a class="nuke-button ws-nowrap s-btn s-btn__danger s-btn__outlined" data-reason="OffTopic" data-reasonid="4" title="Does not appear to seek input and discussion from the community" href="#">Not Constructive</a>
-     <a class="nuke-button ws-nowrap s-btn s-btn__danger s-btn__outlined" data-reason="OffTopic" data-reasonid="5" title="Rendered obsolete by changes to the system or circumstances" href="#">No Repro</a>`
+    `<a class="nuke-button ws-nowrap s-btn s-btn__danger s-btn__outlined" data-reason="OffTopic" data-reasonid="6" title="Not about Stack Overflow or the Stack Exchange network" href="javascript:void(0);">Not Meta</a>
+     <a class="nuke-button ws-nowrap s-btn s-btn__danger s-btn__outlined" data-reason="OffTopic" data-reasonid="4" title="Does not appear to seek input and discussion from the community" href="javascript:void(0);">Not Constructive</a>
+     <a class="nuke-button ws-nowrap s-btn s-btn__danger s-btn__outlined" data-reason="OffTopic" data-reasonid="5" title="Rendered obsolete by changes to the system or circumstances" href="javascript:void(0);">No Repro</a>`
                               }
-     <a class="nuke-button ws-nowrap s-btn s-btn__danger s-btn__outlined" data-reason="NeedsDetailsOrClarity" title="Unclear or requires additional details" href="#">Unclear</a>
-     <a class="nuke-button ws-nowrap s-btn s-btn__danger s-btn__outlined" data-reason="NeedMoreFocus" title="Not a specific problem with enough detail to identify an adequate answer" href="#">Too Broad</a>
-     <a class="nuke-button ws-nowrap s-btn s-btn__danger s-btn__outlined" data-reason="OpinionBased" title="Primarily opinion-based" href="#">Opinion</a>
-     <a class="nuke-button ws-nowrap s-btn s-btn__danger s-btn__outlined" data-reason="OffTopic" data-reasonid="3" data-reasontext="This question is off-topic because it is not written in English. All posts on this site are [required to be in English](https://meta.stackexchange.com/questions/13676/)." title="Not written in English" href="#">Not English</a>
+     <a class="nuke-button ws-nowrap s-btn s-btn__danger s-btn__outlined" data-reason="NeedsDetailsOrClarity" title="Unclear or requires additional details" href="javascript:void(0);">Unclear</a>
+     <a class="nuke-button ws-nowrap s-btn s-btn__danger s-btn__outlined" data-reason="NeedMoreFocus" title="Not a specific problem with enough detail to identify an adequate answer" href="javascript:void(0);">Too Broad</a>
+     <a class="nuke-button ws-nowrap s-btn s-btn__danger s-btn__outlined" data-reason="OpinionBased" title="Primarily opinion-based" href="javascript:void(0);">Opinion</a>
+     <a class="nuke-button ws-nowrap s-btn s-btn__danger s-btn__outlined" data-reason="OffTopic" data-reasonid="3" data-reasontext="This question is off-topic because it is not written in English. All posts on this site are [required to be in English](https://meta.stackexchange.com/questions/13676/)." title="Not written in English" href="javascript:void(0);">Not English</a>
 </div>`).appendTo(qh);
 
          nukeActions.one('click', 'a[data-reason]', function() {
