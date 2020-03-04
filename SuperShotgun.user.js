@@ -98,9 +98,9 @@
             if(typeof pid === 'undefined' || pid == null) { reject(); return; }
 
             closeQuestion(pid, closeReason, offTopicReasonId, offTopicOtherText).then(function() {
-                //downvotePost(pid).then(function() {
-                //    deletePost(pid).then(resolve, reject).finally(reloadPage);
-                //}, reject)
+                downvotePost(pid).then(function() {
+                    deletePost(pid).then(resolve, reject).finally(reloadPage);
+                }, reject)
             }, reject);
         });
     }
