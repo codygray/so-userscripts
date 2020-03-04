@@ -10,9 +10,6 @@
 // @exclude      https://stackoverflow.com/c/*
 // ==/UserScript==
 
-// Credit goes to fellow moderator Samuel Liew, on whose prior work
-// (https://github.com/samliew/so-mod-userscripts) much of this code is based.
-
 (function() {
     'use strict';
 
@@ -82,7 +79,9 @@
                     'closeReasonId': closeReason,
                     'closeAsOffTopicReasonId': offTopicReasonId,
                     'offTopicOtherText': offTopicOtherText,
-                    'duplicateOfQuestionId': null,
+                    //'offTopicOtherCommentId': '',
+                    //'originalOffTopicOtherText': offTopicOtherText,
+                    'originalOffTopicOtherText': 'I\'m voting to close this question as off-topic because ',
                 }
             })
             .done(resolve)
@@ -99,9 +98,9 @@
             if(typeof pid === 'undefined' || pid == null) { reject(); return; }
 
             closeQuestion(pid, closeReason, offTopicReasonId, offTopicOtherText).then(function() {
-                downvotePost(pid).then(function() {
-                    deletePost(pid).then(resolve, reject).finally(reloadPage);
-                }, reject)
+                //downvotePost(pid).then(function() {
+                //    deletePost(pid).then(resolve, reject).finally(reloadPage);
+                //}, reject)
             }, reject);
         });
     }
@@ -146,7 +145,7 @@
      <a class="nuke-button ws-nowrap s-btn s-btn__danger s-btn__outlined" data-reason="NeedsDetailsOrClarity" title="Unclear or requires additional details" href="#">Unclear</a>
      <a class="nuke-button ws-nowrap s-btn s-btn__danger s-btn__outlined" data-reason="NeedMoreFocus" title="Not a specific problem with enough detail to identify an adequate answer" href="#">Too Broad</a>
      <a class="nuke-button ws-nowrap s-btn s-btn__danger s-btn__outlined" data-reason="OpinionBased" title="Primarily opinion-based" href="#">Opinion</a>
-     <a class="nuke-button ws-nowrap s-btn s-btn__danger s-btn__outlined" data-reason="OffTopic" data-reasonid="3" data-reasontext="This question is off-topic because it is not written in English. All posts on this site are required to be in English." title="Not written in English" href="#">Not English</a>
+     <a class="nuke-button ws-nowrap s-btn s-btn__danger s-btn__outlined" data-reason="OffTopic" data-reasonid="3" data-reasontext="This question is off-topic because it is not written in English. All posts on this site are [required to be in English](https://meta.stackexchange.com/questions/13676/)." title="Not written in English" href="#">Not English</a>
 </div>`).appendTo(qh);
 
          nukeActions.one('click', 'a[data-reason]', function() {
