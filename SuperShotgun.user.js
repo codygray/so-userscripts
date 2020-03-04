@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Super Shotgun
 // @description  Facilitates immediate, hassle-free removal of inappropriate questions by a moderator.
-// @version      0.1
+// @version      0.2
 // @author       Cody Gray
 //
 // @include      https://*stackoverflow.com/*
