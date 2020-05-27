@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Super Shotgun
 // @description  Facilitates immediate, hassle-free removal of inappropriate questions by a moderator.
-// @version      0.2
+// @version      0.3
 // @author       Cody Gray
 //
 // @include      https://*stackoverflow.com/*
@@ -60,28 +60,30 @@
         return voteOnPost(pid, 11);
     }
 
-    function closeQuestion(pid, closeReason, offTopicReasonId, offTopicOtherText = '') {
+    // Close individual post
+    // closeReasonId: 'NeedMoreFocus', 'SiteSpecific', 'NeedsDetailsOrClarity', 'OpinionBased', 'Duplicate'
+    // if closeReasonId is 'SiteSpecific', offtopicReasonId : 11-norepro, 13-nomcve, 16-toolrec, 3-custom
+    function closeQuestion(pid, closeReasonId = 'SiteSpecific', offtopicReasonId = 3, offTopicOtherText = 'I’m voting to close this question because ', duplicateOfQuestionId = null) {
         return new Promise(function(resolve, reject) {
             if(typeof pid === 'undefined' || pid === null) { reject(); return; }
-            if(typeof closeReason === 'undefined' || closeReason === null || closeReason == '') { reject(); return; }
-            if (closeReason == 'OffTopic') {
-                if (typeof offTopicReasonId === 'undefined' || offTopicReasonId === null) { reject(); return; }
-            }
-            else {
-                offTopicReasonId = null;
-                offTopicOtherText = null;
-            }
+            if(typeof closeReasonId === 'undefined' || closeReasonId === null) { reject(); return; }
+            if(closeReasonId === 'SiteSpecific' && (typeof offtopicReasonId === 'undefined' || offtopicReasonId === null)) { reject(); return; }
+
+            if(closeReasonId === 'Duplicate') offtopicReasonId = null;
+
+            // Logging actual action
+            console.log(`%c Closing ${pid} as ${closeReasonId}, reason ${offtopicReasonId}.`, 'font-weight: bold');
 
             $.post({
                 url: `https://${location.hostname}/flags/questions/${pid}/close/add`,
                 data: {
                     'fkey': fkey,
-                    'closeReasonId': closeReason,
-                    'closeAsOffTopicReasonId': offTopicReasonId,
-                    'offTopicOtherText': offTopicOtherText,
+                    'closeReasonId': closeReasonId,
+                    'duplicateOfQuestionId': duplicateOfQuestionId,
+                    'siteSpecificCloseReasonId': offtopicReasonId,
+                    'siteSpecificOtherText': offTopicOtherText,
                     //'offTopicOtherCommentId': '',
-                    //'originalOffTopicOtherText': offTopicOtherText,
-                    'originalOffTopicOtherText': 'I\'m voting to close this question as off-topic because ',
+                    'originalSiteSpecificOtherText': 'I’m voting to close this question because ',
                 }
             })
             .done(resolve)
