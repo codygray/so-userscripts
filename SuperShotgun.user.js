@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Super Shotgun
 // @description  Facilitates immediate, hassle-free removal of inappropriate questions by a moderator.
-// @version      0.3.1
+// @version      0.3.2
 // @author       Cody Gray
 //
 // @include      https://*stackoverflow.com/*
@@ -140,7 +140,7 @@
                               ${!isMeta ?
     `<a class="nuke-button ws-nowrap s-btn s-btn__danger s-btn__outlined" data-reason="OffTopic" data-reasonid="4" title="General computer usage (e.g., Super User)" href="javascript:void(0);">User</a>
      <a class="nuke-button ws-nowrap s-btn s-btn__danger s-btn__outlined" data-reason="OffTopic" data-reasonid="7" title="Professional server administration (e.g., Server Fault)" href="javascript:void(0);">Server</a>
-     <a class="nuke-button ws-nowrap s-btn s-btn__danger s-btn__outlined" data-reason="OffTopic" data-reasonid="3" data-reasontext="This question does not appear to be about programming within the scope defined in the [help]." title="General off-topic" href="javascript:void(0);">Off-Topic</a>
+     <a class="nuke-button ws-nowrap s-btn s-btn__danger s-btn__outlined" data-reason="OffTopic" data-reasonid="3" data-reasontext="This question does not appear to be about programming within the scope defined in the [Help Center](https://stackoverflow.com/help/on-topic)." title="General off-topic" href="javascript:void(0);">Off-Topic</a>
      <a class="nuke-button ws-nowrap s-btn s-btn__danger s-btn__outlined" data-reason="OffTopic" data-reasonid="16" title="Soliciting recommendations for off-site resources" href="javascript:void(0);">Recommend</a>`
                               :
     `<a class="nuke-button ws-nowrap s-btn s-btn__danger s-btn__outlined" data-reason="OffTopic" data-reasonid="6" title="Not about Stack Overflow or the Stack Exchange network" href="javascript:void(0);">Not Meta</a>
