@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Super Shotgun
 // @description  Facilitates immediate, hassle-free removal of inappropriate questions by a moderator.
-// @version      0.3
+// @version      0.3.1
 // @author       Cody Gray
 //
 // @include      https://*stackoverflow.com/*
@@ -64,6 +64,10 @@
     // closeReasonId: 'NeedMoreFocus', 'SiteSpecific', 'NeedsDetailsOrClarity', 'OpinionBased', 'Duplicate'
     // if closeReasonId is 'SiteSpecific', offtopicReasonId : 11-norepro, 13-nomcve, 16-toolrec, 3-custom
     function closeQuestion(pid, closeReasonId = 'SiteSpecific', offtopicReasonId = 3, offTopicOtherText = 'I’m voting to close this question because ', duplicateOfQuestionId = null) {
+
+        // OffTopic has been replaced with SiteSpecific
+        if(closeReasonId === 'OffTopic') closeReasonId = 'SiteSpecific';
+
         return new Promise(function(resolve, reject) {
             if(typeof pid === 'undefined' || pid === null) { reject(); return; }
             if(typeof closeReasonId === 'undefined' || closeReasonId === null) { reject(); return; }
@@ -92,7 +96,7 @@
     }
 
     function closeQuestionAsOffTopic(pid, offTopicReasonId, offTopicOtherText = '') {
-        return closeQuestion(pid, 'OffTopic', offTopicReasonId, offTopicOtherText);
+        return closeQuestion(pid, 'SiteSpecific', offTopicReasonId, offTopicOtherText);
     }
 
     function closeAndRemoveQuestionWithPrejudice(pid, closeReason, offTopicReasonId, offTopicOtherText = '') {
