@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Super Shotgun
 // @description  Facilitates immediate, hassle-free removal of inappropriate questions by a moderator.
-// @version      0.3.4
+// @version      0.3.5
 // @author       Cody Gray
 // @homepage     https://github.com/codygray/so-userscripts
 //
@@ -85,6 +85,7 @@
                        url: `https://${location.hostname}/flags/questions/${pid}/close/add`,
                        data: {
                            'fkey': fkey,
+                           'closeReasonId': closeReasonId,
                            'duplicateOfQuestionId': (closeReasonId === 'Duplicate' ? duplicateId : null),
                            'siteSpecificCloseReasonId': (closeReasonId === 'Duplicate' ? null : siteSpecificReasonId),
                            'siteSpecificOtherText': siteSpecificOtherText,
@@ -106,7 +107,7 @@
     {
         return new Promise(function(resolve, reject)
         {
-            if (typeof pid === 'undefined' || pid == null) { reject(); return; }
+            if (typeof pid === 'undefined' || pid === null) { reject(); return; }
 
             closeQuestion(pid, closeReason, offTopicReasonId, offTopicOtherText).then(function()
             {
@@ -159,7 +160,7 @@
      <a class="nuke-button ws-nowrap s-btn s-btn__danger s-btn__outlined" data-reason="NeedsDetailsOrClarity" title="Unclear or requires additional details" href="javascript:void(0);">Unclear</a>
      <a class="nuke-button ws-nowrap s-btn s-btn__danger s-btn__outlined" data-reason="NeedMoreFocus" title="Not a specific problem with enough detail to identify an adequate answer" href="javascript:void(0);">Too Broad</a>
      <a class="nuke-button ws-nowrap s-btn s-btn__danger s-btn__outlined" data-reason="OpinionBased" title="Primarily opinion-based" href="javascript:void(0);">Opinion</a>
-     <a class="nuke-button ws-nowrap s-btn s-btn__danger s-btn__outlined" data-reason="SiteSpecific" data-reasonid="3" data-reasontext="This question is off-topic because it is not written in English. All posts on this site are [required to be in English](https://meta.stackexchange.com/questions/13676/)." title="Not written in English" href="javascript:void(0);">Not English</a>
+     <a class="nuke-button ws-nowrap s-btn s-btn__danger s-btn__outlined" data-reason="SiteSpecific" data-reasonid="3" data-reasontext="This question is not written in English, and therefore does not meet the minimum requirements for Stack Overflow. All posts on this site are [required to be in English](https://meta.stackexchange.com/questions/13676/)." title="Not written in English" href="javascript:void(0);">Not English</a>
 </div>`).appendTo(qh);
 
          nukeActions.one('click', 'a[data-reason]', function() {
