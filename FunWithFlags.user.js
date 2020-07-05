@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Fun With Flags
 // @description  Miscellaneous improvements to the UX for the moderator flag dashboard.
-// @version      0.1.1
+// @version      0.1.2
 // @author       Cody Gray
 // @homepage     https://github.com/codygray/so-userscripts
 //
@@ -32,7 +32,17 @@
 
     function onPageLoad()
     {
-        // When opening the "decline" options, pre-select the default reason and focus the submit button. */
+        // While we're at it, make all comment textareas auto-grow as you type in them.
+        $('textarea.js-comment-text-input').each(function()
+        {
+            this.setAttribute('style', 'height:' + (this.scrollHeight) + 'px;overflow-y:hidden;');
+        }).on('input', function()
+        {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
+
+        // When opening the "decline" options, pre-select the default reason and focus the submit button.
         $('.js-resolve-action[data-type="decline"]').click(function(evt)
         {
             const flagOpts = $(this).closest('.js-post-flag-group, .js-post-flag-options');
