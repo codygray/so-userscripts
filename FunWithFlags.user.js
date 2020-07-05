@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Fun With Flags
 // @description  Miscellaneous improvements to the UX for the moderator flag dashboard.
-// @version      0.1.0
+// @version      0.1.1
 // @author       Cody Gray
 // @homepage     https://github.com/codygray/so-userscripts
 //
@@ -60,8 +60,12 @@
 
 /* Make the [edited] badge stand out more. */
 .s-badge[title^="post edited"] {
-    color: var(--red-500);
-    border-color: var(--red-500);
+    color: var(--orange-500);
+    border-color: var(--orange-500);
+    /* The [n answers] badge has the .va-baseline class, but the [edited] badge does not.
+     * It should: this is a bug in the Stack Overflow mod dashboard CSS.
+     * Rather than adding that class, simply add the correct style. */
+    vertical-align: baseline;
 }
 
 /* Show a "help" cursor on everything that has a tooltip on hover. */
