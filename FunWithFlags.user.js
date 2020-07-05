@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Fun With Flags
 // @description  Miscellaneous improvements to the UX for the moderator flag dashboard.
-// @version      0.1.2
+// @version      0.1.3
 // @author       Cody Gray
 // @homepage     https://github.com/codygray/so-userscripts
 //
@@ -100,7 +100,7 @@
 
 /* Compress the flag decline options to save screen space. */
 .js-dismiss-container fieldset > .grid--cell {
-    margin: 3px 0;
+    margin: 4px 0;
 }
 
 /* Make the flag decline reason textbox fill the entire width of the container. */
