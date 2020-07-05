@@ -8,7 +8,16 @@
 // @updateURL    https://github.com/codygray/so-userscripts/raw/master/FunWithFlags.user.js
 // @downloadURL  https://github.com/codygray/so-userscripts/raw/master/FunWithFlags.user.js
 //
-// @include      */admin/dashboard*
+// @include      https://*stackoverflow.com/*
+// @include      https://*serverfault.com/*
+// @include      https://*superuser.com/*
+// @include      https://*askubuntu.com/*
+// @include      https://*mathoverflow.net/*
+// @include      https://*.stackexchange.com/*
+//
+// @exclude      *chat.*
+// @exclude      *blog.*
+// @exclude      https://stackoverflow.com/c/*
 // ==/UserScript==
 
 (function()
