@@ -1,19 +1,15 @@
 // ==UserScript==
 // @name         Super Shotgun
 // @description  Facilitates immediate, hassle-free removal of inappropriate questions by a moderator.
-// @version      0.3.6
+// @version      0.3.7
 // @author       Cody Gray
 // @homepage     https://github.com/codygray/so-userscripts
 //
 // @updateURL    https://github.com/codygray/so-userscripts/raw/master/SuperShotgun.user.js
 // @downloadURL  https://github.com/codygray/so-userscripts/raw/master/SuperShotgun.user.js
 //
-// @include      https://*stackoverflow.com/*
-// @include      https://*serverfault.com/*
-// @include      https://*superuser.com/*
-// @include      https://*askubuntu.com/*
-// @include      https://*mathoverflow.net/*
-// @include      https://*.stackexchange.com/*
+// @include      https://stackoverflow.com/*
+// @include      https://meta.stackoverflow.com/*
 //
 // @exclude      *chat.*
 // @exclude      *blog.*

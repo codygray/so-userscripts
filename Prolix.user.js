@@ -21,7 +21,7 @@
 
 (function()
 {
-'use strict';
+   'use strict';
 
 
    function onElementInserted(containerSelector, elementSelector, callback)
