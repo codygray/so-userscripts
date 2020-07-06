@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Prolix
-// @description  Improve site UX for particularly long-winded users.
-// @version      0.1.1
+// @description  Improve site UX for particularly long-winded users and their allies.
+// @version      0.2.0
 // @author       Cody Gray
 // @homepage     https://github.com/codygray/so-userscripts
 //
@@ -23,6 +23,8 @@
 {
    'use strict';
 
+
+   const isMeta = (location.hostname == 'meta.stackoverflow.com' || (typeof StackExchange.options.site.parentUrl !== 'undefined'));
 
    function onElementInserted(containerSelector, elementSelector, callback)
    {
@@ -74,12 +76,36 @@
    {
       const styles = `
 <style>
+/* REMOVE CLUTTER: */
+
+/* Remove the "Products" menu in the Stack Overflow top nav bar.
+ * <https://meta.stackoverflow.com/q/386393> */
+.top-bar .-marketing-link {
+    display: none !important;
+}
+
+/* GENERAL: */
+
+/* Make visited links visible again by changing them to a distinct color (e.g., purple).
+ * <https://meta.stackoverflow.com/q/392188> */
+body .post-text a:not(.post-tag):not(.badge-tag):visited,
+body .comment-copy a:visited,
+body .wmd-preview a:not(.post-tag):not(.badge-tag):visited,
+body .question-hyperlink:visited,
+body .answer-hyperlink:visited {
+    color: ${isMeta ? '#848586' : '#5C08C3'};
+}
+
+/* VOTING CONTAINER: */
+
 /* Make voting arrows and other sidebar content "sticky", so that it scrolls with long posts. */
 .js-voting-container {
   position: sticky;
   top: 0;
   z-index: 100;
 }
+
+/* COMMENTS: */
 
 /* Undo stupid Stacks style that hides the scrollbar arrows. */
 .s-input, .s-textarea {
