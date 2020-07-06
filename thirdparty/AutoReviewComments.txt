@@ -1,0 +1,243 @@
+###[A] Non English answer
+$SITENAME$ is an [English-only site](//meta.stackexchange.com/q/13676). Thus, all answers must be written in English.
+
+###[A] Spam
+Excessive promotion of a specific product/resource may be perceived by the community as **spam**. Take a look at the [help], specially [What kind of behavior is expected of users?](//$SITEURL$/help/behavior)'s last section: _Avoid overt self-promotion_. You might also be interested in [How to not be a spammer](//$SITEURL$/help/promotion) and [How do I advertise on $SITENAME$?](//www.stackoverflowbusiness.com/advertising).
+
+###[A] Garbage (non-intelligible gibberish or troll meaningless content)
+This is a garbage post by an 1-rep unregistered user without any meaningful contributions. [Flag as "Rude or abusive"](//meta.stackexchange.com/a/58035) to destroy it quickly without poorly seeding the spam detector.
+
+###[A] Code only answer
+While this code may solve the question, [including an explanation](//meta.stackexchange.com/q/114762) of how and why this solves the problem would really help to improve the quality of your post, and probably result in more up-votes. Remember that you are answering the question for readers in the future, not just the person asking now. Please [edit] your answer to add explanations and give an indication of what limitations and assumptions apply.
+
+###[A] Me Too Questions by < 50 rep
+This does not provide an answer to the question. You can [search for similar questions](//$SITEURL$/search), or refer to the related questions linked in the right-hand side of the page to find an answer. If you have a related but different question, [ask a new question](//$SITEURL$/questions/ask), and include a link to this one to help provide context. See: [Ask questions, get answers, no distractions](//$SITEURL$/tour)
+
+###[A] Answers just to say Thanks!
+Please don't post answers to say "thanks". Answers should be reserved only for actual answers to the question. Instead, invest some time in the site and you will gain sufficient [privileges to upvote](//$SITEURL$/privileges/vote-up) answers you like, which is the $SITENAME$ way of saying "thank you". (See: [Why is voting important](//$SITEURL$/help/why-vote))
+
+###[A] Begging for answer
+Posting follow-up requests as answers is not effective at attracting answerers. Read [What should I do if no one answers my question?](//$SITEURL$/help/no-one-answers) for suggestions to get more attention.
+
+###[A] NAAs by < 50 rep
+This does not provide an answer to the question. You can [search for similar questions](//$SITEURL$/search), or refer to the related and linked questions on the right-hand side of the page to find an answer. If you have a related but different question, [ask a new question](//$SITEURL$/questions/ask), and include a link to this one to help provide context. See: [Ask questions, get answers, no distractions](//$SITEURL$/tour)
+
+###[A] NAAs by > 50 rep
+This post doesn't look like an attempt to answer this question. Every post here is expected to be an explicit attempt to *answer* this question; if you have a critique or need a clarification of the question or another answer, you can [post a comment](//$SITEURL$/help/privileges/comment) (like this one) directly below it. Please remove this answer and create either a comment or a new question. See: [Ask questions, get answers, no distractions](//$SITEURL$/tour).
+
+###[A] Comment as answer
+This does not provide an answer to the question. To make suggestions to or request clarification from an author, you should leave a comment below their post. If you [earn](//meta.stackoverflow.com/q/146472) sufficient [reputation](//$SITEURL$/help/whats-reputation) you will be able to [comment on any post](//$SITEURL$/help/privileges/comment). In the mean time, to earn reputation, you will need to stick to answering questions that need no clarification.
+
+###[A] Comment
+The reputation limits are there for a reason, please don't try to work your way around them by misusing other features. Answers are for answers only. See also [Why do I need 50 reputation to comment? What can I do instead?](https://meta.stackexchange.com/q/214173)
+
+###[A] Question posted as an answer
+This post isn't an actual attempt at answering the question. Please note [$SITENAME$ doesn't work like a discussion forum](//$SITEURL$/about), it is a Q&A site where every post is either a question or an answer to a question. Posts can also have [comments](//$SITEURL$/help/privileges/comment) — small sentences like this one — that can be used to critique or request clarification from an author. This should be either a comment or a [new question](//$SITEURL$/questions/ask).
+
+###[A] Code only answer
+While this code snippet may solve the problem, [including an explanation](//meta.stackexchange.com/q/114762) really helps to improve the quality of your post. Remember that you are answering the question for readers in the future, and those people might not know the reasons for your code suggestion. Please also try not to crowd your code with explanatory comments, this reduces the readability of both the code and the explanations!
+
+###[A] Duplicate link only
+Please don't post answers that consist merely of a link to other $SITENAME$ questions. Instead, flag this question as a duplicate of the other question. If the questions are not duplicates, you must provide a complete, self-contained answer that is tailored specifically to the question being asked, providing [attribution](//$SITEURL$/help/referencing) to the users whose answers you are drawing information from.
+
+###[A] Identical answers (where I fixed)
+[You previously posted this exact same answer to another question](?). Please don't post identical answers to multiple questions. Pick the best question and post one good answer there, and then flag to close the other question(s) as duplicates. (I've already handled the duplication in this case.) If the questions are not duplicates, you must [*tailor your answers specifically to each question*](http://meta.stackexchange.com/q/104227).
+
+###[A] Many formatting issues (VLQ)
+Please take a moment to read through the [editing help](//$SITEURL$/editing-help) in the [help]. Formatting on $SITENAME$ is different than other sites.
+
+###[A] Same answer posted to multiple questions
+Please don't add the same answer to multiple questions. Answer the best one and flag the rest as duplicates. See [Is it acceptable to add a duplicate answer to several questions?](//meta.stackexchange.com/q/104227)
+
+###[A] Link Only Answers
+A link to a solution is welcome, but your answer must be self-contained and useful even without the link: [add context around the link](//meta.stackexchange.com/a/8259) so your fellow users will have some idea what it is and why it’s there, then ***quote or summarize* the relevant information from the page you're linking to, in case that page becomes unavailable**. [Answers that are little more than a link are regularly deleted](//$SITEURL$/help/deleted-answers).
+
+###[A] Link only (SO link)
+This should be a comment, not an answer. If it is a duplicate question, [vote to close](//$SITEURL$/help/privileges/close-questions) as such and/or leave a comment once you [earn](//meta.stackoverflow.com/q/146472) enough [reputation](//$SITEURL$/help/whats-reputation). If not, *tailor the answer to this specific question*.
+
+###[A] Link only (SE link)
+Please don't post link-only answers to other Stack Exchange questions. Instead, include the essential portions of the answer here, and *tailor the answer to this specific question.*
+
+###[A] Library
+Please don't just post some tool or library as an answer. At least demonstrate [how it solves the problem](http://meta.stackoverflow.com/a/251605) in the answer itself.
+
+###[A] Library (Personal Open-Source)
+Please don't just post some tool or library as an answer. At least demonstrate [how it solves the problem](http://meta.stackoverflow.com/a/251605) in the answer itself. Because this appears to involve a personal OSS project, you probably want to read this as well: [*How to offer personal open-source libraries?*](https://meta.stackexchange.com/questions/229085/how-to-offer-personal-open-source-libraries)
+
+###[A] Answering off-topic/bad question
+Please don't post answers on obviously off topic/bad questions! [See: **Should one advise on off topic questions?**](//meta.stackoverflow.com/q/276572)
+
+###[A] Tool recommendation for a tool request
+Thank you for participating on $SITENAME$. However please note that the question you have answered is off-topic as per the [help/on-topic] since it is a tool request. Answers to such questions tend to be of [poor quality](//meta.stackexchange.com/a/8259) and quickly become stale (what might have been a good resource two years ago may simply not exist anymore). You can flag this question as off-topic by clicking the "flag" link once you have sufficient reputation.
+
+###[A] Pointing out a typo
+Please don't post answers only pointing out a typographical issue or a missing character. Such answers are unlikely to help future visitors since they are specific to OP's code. Instead, flag or vote to close the question as off-topic as per the [help/on-topic].
+
+###[A] Data/Code as image
+Please add code and data as text ([using code formatting](//$SITEURL$/editing-help#code)), not images. Images: A) don't allow us to copy-&-paste the code/errors/data for testing; B) don't permit searching based on the code/error/data contents; and [many more reasons](//meta.stackoverflow.com/a/285557). In general, code/errors/data in text format >>>> code/errors/data as an image >> nothing. Images should only be used, in addition to text in code format, if having the image adds something significant that is not conveyed by just the text code/error/data.
+
+###[A] Code improperly edited by non-OP user (Restore code first)
+Edits to other people's code may invalidate questions and answers. Please read [When should I make edits to code?](//meta.stackoverflow.com/q/260245)
+
+###[A] Language, please
+I know you're excited, but please try to keep your language under control. Think of $SITENAME$ as more like Wikipedia than like Reddit.
+
+###[A] Borderline-spam link answer
+Please be careful with linking to your own content on different sites, you don't want to be a [spammer](//$SITEURL$/help/promotion). You should be including the majority of the content here, and use the link only as a reference.
+
+###[A] Vandalism
+Do not vandalize your posts. You can always delete your own answer, unless it has been [accepted](https://$SITEURL$/help/accepted-answer) by the person who asked the question.
+
+###[Q] Vandalism
+Do not vandalize your posts. By posting on this site, you've irrevocably granted the Stack Exchange network the right to distribute that content under the [CC BY-SA 3.0 license](//creativecommons.org/licenses/by-sa/3.0/) for as long as it sees fit. For alternatives to deletion, see: [I've thought better of my question; can I delete it?](https://$SITEURL$/help/what-to-do-instead-of-deleting-question)
+
+###[A] Offer only 1:1 help
+While helping individuals, we also try to produce a permanent source of future help for others - so answers that produce a tangible record are preferred. Before offering 1:1 help, read [this Meta post](//meta.stackoverflow.com/q/280603) and reconsider making the effort to document the answer.
+
+###[C] General Off-Topic
+This question is off-topic because it is not a practical programming problem within the scope described in the [help].
+
+###[C] Not In English
+This question is off-topic because it is not written in English. [$SITENAME$ is an English-only site](//meta.stackexchange.com/q/13676).
+
+###[C] General Legal or Licensing Question
+[Licensing advice is off-topic on $SITENAME$.](//meta.stackoverflow.com/a/274964) You may be able to get help on [SoftwareEngineering.SE](//softwareengineering.stackexchange.com), but [**read their faq carefully** before proceeding](//softwareengineering.meta.stackexchange.com/q/7265). Legal questions may be asked on [Law.SE](//law.stackexchange.com/).
+
+###[C] Open Source Licensing
+This question is off-topic because [licensing advice is off-topic on $SITENAME$.](//meta.stackoverflow.com/a/274964). Open source licensing questions can be asked on [OpenSource.SE](//opensource.stackexchange.com/help/on-topic). Legal questions may be asked on [Law.SE](//law.stackexchange.com/).
+
+###[C] We are not Customer Support
+This question is off-topic because [we are not customer support for your favorite company](//meta.stackoverflow.com/questions/255745).
+
+###[C] SEO
+This question is off-topic because it is about SEO which is off-topic at $SITENAME$. Please read "[Which SEO questions should be closed as non-programming/non-admin?](//meta.stackoverflow.com/a/382618)" to better understand when SEO questions are acceptable to ask here (most are not). General SEO questions may be asked on [Webmasters.SE](//webmasters.stackexchange.com/).
+
+###[C] Project Management
+[Project management is off-topic on $SITENAME$.](//meta.stackoverflow.com/a/343841) You can ask these questions on [SoftwareEngineering.SE](//softwareengineering.stackexchange.com) and [ProjectManagement.SE](//pm.stackexchange.com).
+
+###[C] General App Store Policy
+Questions about [app store policies are off-topic on $SITENAME$](//meta.stackoverflow.com/q/272165). You will need to ask the company itself about their policies, as they are subject to change.
+
+###[C] Apple iTunes Store Policy
+Questions about [iTunes App Store policies are off-topic on $SITENAME$](//meta.stackoverflow.com/q/272165). Some questions may be on topic at [Apple.SE](//apple.stackexchange.com/help/on-topic).
+
+###[C] SW Dev Process & SW Eng
+Questions about the software development process and software engineering, including quality assurance, architecture & design are off topic on $SITENAME$. You might try posting on [SoftwareEngineering.SE](//meta.stackoverflow.com/a/254571).
+
+###[C] Intent to hack or scrape from specific site, e.g. YouTube
+The subject and content of this question violates the [$SITENAME$ Terms of Service sect 3 c and/or e](https://stackexchange.com/legal/terms-of-service#3SubscriberContent) by targeting a specific organization with intent to expropriate proprietary data.
+
+###[EQ] Improper tagging
+The tags you were using are not appropritate for this question. Please review [What are tags, and how should I use them?](//$SITEURL$/help/tagging)
+
+###[EQ] SOLVED!
+Please don't put the answer in your question; You can self-answer as per https://$SITEURL$/help/self-answer your question if you found the solution;
+
+###[EQ] i capitalization
+Capitalize the first person singular pronoun as per https://english.stackexchange.com/q/172;
+
+###[EQ] it's / its
+it's and its are different; please see https://english.stackexchange.com/q/653;
+
+###[EQ] Formatting
+See how you can format and indent your code correctly as per https://$SITEURL$/help/formatting;
+
+###[EQ] Hi, and thanks!
+Hi, thanks, etc. are considered noise; see: https://meta.stackexchange.com/q/2950
+
+###[EQ] New question
+If you have a new question, please don't edit it over your old one - ask one here from https://$SITEURL$/questions/ask;
+
+###[EQ] Destroying content
+Please don't destroy content on $SITENAME$;
+
+###[Q] Too much code (closed)
+To clarify the reason why this question was closed, it's because it contains ***way*** too much code for a simple problem. You need to create a [MCVE] (emphasis on *minimal* here) that reproduces your problem. If you are still having this problem and need an answer, please use the [edit] link to update your question, following the above-linked guidance.
+
+###[Q] Too much code (warning)
+This question contains ***way*** too much code for a simple problem. Instead of just posting *all* of your code, you need to create a [MCVE] (emphasis on *minimal* here) that reproduces your problem. Please try and trim some of this down, following the above-linked guidance. Use the [edit] link to improve your question, and your chances of getting a good answer.
+
+###[Q] Picture of code
+Please [edit] your question to include code and errors as **text** ([using code formatting](http://$SITEURL$/editing-help#code)), not images. Images are problematic for [many reasons](https://meta.stackoverflow.com/a/285557), including that they don't allow copy-pasting text for testing or searching.
+
+###[Q] Spam
+Excessive promotion of a specific product/resource may be perceived by the community as **spam**. Take a look at the [help], specially [What kind of behavior is expected of users?](//$SITEURL$/help/behavior)'s last section: _Avoid overt self-promotion_. You might also be interested in [How to not be a spammer](//$SITEURL$/help/promotion) and [How do I advertise on $SITENAME$?](//$SITEURL$/help/advertising).
+
+###[Q] Many formatting issues
+Take a moment to read through the [editing help](//$SITEURL$/editing-help) in the help center. Formatting on $SITENAME$ is different than on other sites. The better your post looks, the easier it is for others to read and understand it.
+
+###[Q] Wrong tags
+The tags you have been using are not appropriate for this question. Please take the [tour], review [what are tags and how should I use them?](//$SITEURL$/help/tagging) and [edit] your post. Remember to at least read the mouseover on the tags you are using when asking a question.
+
+###[Q] Ask OP to edit question instead of adding info in comments
+Please [edit] your post to include any additional information you have to your question. Avoid adding this in the comments, as they are harder to read and can be deleted easier. The edit button for your post is just below the post's tags.
+
+###[Q] Code improperly edited by non-OP user (Restore code first)
+@code-editor Edits to others' code may invalidate questions and answers. Please read [When should I make edits to code?](//meta.stackoverflow.com/q/260245).
+
+###[Q] "It doesn't work" with no exception/error details
+Can you elaborate on how your code "doesn't work"? What were you expecting, and what actually happened? If you got an exception/error, post the line it occurred on and the exception/error details which can be done with a [mre]. Please [edit] your question to add these details into it or we may not be able to help.
+
+###[Q] Too many ways to solve the problem
+There are too many ways to approach this problem. The answers would just turn into a straw-poll for which one people liked. The best thing is to do some research on the topic yourself, find two or three, _analyze_ them, determine if they work for you or not, and _try them out_. Come to us when you have a specific question about something you have attempted to do.
+
+###[Q] "Need to make program" but no question
+All that has been posted is a program description. However, we need you to ask a question according to the [ask] page. We can't be sure what you want from us. Please [edit] your post to include a valid question that we can answer. Reminder: make sure you know what is on-topic here by visiting the [help/on-topic]; asking us to write the program for you, suggestions, and external links are off-topic.
+
+###[Q] Need to make changes to existing (missing) code
+We won't know how to make the changes to your existing code base without seeing your original code. Please post a [mre], and fully explain what needs to be modified.
+
+###[Q] Wall of code
+You seem to have posted more code than what would be reasonable for your issue. Please read [ask] and how to make a [mre]; providing a MRE helps users answer your question and future users relate to your issue.
+
+###[Q] "Where do I start?" question
+Questions that ask "where do I start?" are typically too broad and are not a good fit for this site. People have their own method for approaching the problem and because of this there cannot be a _correct_ answer. Give a good read over [Where to Start](//softwareengineering.meta.stackexchange.com/a/6367) and [edit] your post.
+
+###[Q] More than one question asked
+It is preferred if you can post separate questions instead of combining your questions into one. That way, it helps the people answering your question and also others hunting for at least one of your questions.
+
+###[Q] Asking for code translation
+$SITENAME$ is a Q&A site, not a code translation service. Try to translate the code yourself first, then come to us when you are stuck, making sure to show us what you have tried and create a [mre].
+
+###[Q] Software Rec. question
+Unfortunately, questions asking us to recommend or find a book, tool, software library, tutorial or other off-site resource are off-topic here. However, you may find better luck [SoftwareRecs.SE](//softwarerecs.stackexchange.com/tour). Remember to read [their question requirements](//softwarerecs.stackexchange.com/help/on-topic) as they are more strict than this site!
+
+###[Q] Homework question without effort
+Questions asking for homework help must include a summary of the work you've done so far to solve the problem, and a description of the difficulty you are having solving it. Please read [How to ask homework questions](//meta.stackoverflow.com/q/334822) and [edit] your post.
+
+###[Q] Demanding urgency of volunteers
+Please read [Under what circumstances may I add “urgent” or other similar phrases to my question, in order to obtain faster answers?](//meta.stackoverflow.com/q/326569) - the summary is that this is not an ideal way to address volunteers, and is probably counterproductive to obtaining answers. Please refrain from adding this to your questions.
+
+###[Q] Possible suicide Intl
+It sounds like you're going through a hard time. I'd really like to help you, but unfortunately, we're not well equipped to do so here. Your best option is probably to call [a suicide hotline](//suicide.org/international-suicide-hotlines.html). People are on call there to talk to people struggling with the same kind of issues you are, regardless of location. If calling is not good, you can [chat with them live online](//suicidepreventionlifeline.org/chat/). It might not help, but what’s the harm?
+
+###[Q] Possible suicide US
+It sounds like you’re going through a really hard time. I'd really like to help you, but unfortunately, we're not well-equipped to do so here. Your best option is probably to call the [National Suicide Prevention Lifeline](//suicidepreventionlifeline.org/). People are on call there to talk to people struggling with the same kind of issues you are, regardless of location. US: +1-800-273-8255. If calling is not good, they can [chat with you live online](//suicidepreventionlifeline.org/chat/). It might not help, but what’s the harm?
+
+###[Q] Can someone help? not an actual question
+Questions that ask "please help me" tend to be looking for highly localized guidance, or in some cases, ongoing or private assistance, which is not suited to our Q&A format. It is also rather vague, and is better replaced with a more specific question. Please read [Why is "Can someone help me?" not an actual question?](//meta.stackoverflow.com/q/284236).
+
+###[Q] Give me a regex that does X
+Questions that ask ["Give me a regex that does X"](//meta.stackoverflow.com/q/285733) with no attempt are off topic on $SITENAME$.
+
+###[CRC] Incomplete edit
+If you're going to edit a post, fix all the issues not just some.
+
+###[CRC] Bumping old posts
+Do not make minor edits to old posts. It bumps them to the homepage.
+
+###[CRC] `BackTicks`
+Do not edit just to add backticks. Edit posts that need substantial improvements.
+
+###[CRC] Closed questions
+Do not edit closed questions, unless it brings the question on topic.
+
+###[CRC] Minor grammar
+Do not edit to make minor grammar changes. Edit posts that need substantial improvements.
+
+###[CRC] Bulk tag edits
+Do not make [bulk tag edits](//meta.stackoverflow.com/q/307928).
+
+###[CRC] Code improperly edited by non-OP user (Restore code first)
+Edits to others' code may invalidate questions and answers. Please read [When should I make edits to code?](//meta.stackoverflow.com/q/260245)
+
