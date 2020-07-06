@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Prolix
 // @description  Improve site UX for particularly long-winded users.
-// @version      0.1.0
+// @version      0.1.1
 // @author       Cody Gray
 // @homepage     https://github.com/codygray/so-userscripts
 //
@@ -78,6 +78,7 @@
 .js-voting-container {
   position: sticky;
   top: 0;
+  z-index: 100;
 }
 
 /* Undo stupid Stacks style that hides the scrollbar arrows. */
