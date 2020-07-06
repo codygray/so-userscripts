@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Super Shotgun
 // @description  Facilitates immediate, hassle-free removal of inappropriate questions by a moderator.
-// @version      0.3.7
+// @version      1.0.0
 // @author       Cody Gray
 // @homepage     https://github.com/codygray/so-userscripts
 //
@@ -19,10 +19,11 @@
 (function() {
    'use strict';
 
+
    // Moderator check
    if (typeof StackExchange == "undefined" || !StackExchange.options || !StackExchange.options.user || !StackExchange.options.user.isModerator) { return; }
 
-   const fkey = StackExchange.options.user.fkey;
+
    const isMeta = (location.hostname == 'meta.stackoverflow.com' || (typeof StackExchange.options.site.parentUrl !== 'undefined'));
 
    function reloadPage()
@@ -52,7 +53,7 @@
                   url: `https://${location.hostname}/posts/${pid}/vote/${voteId}`,
                   data:
                   {
-                     fkey: fkey
+                     fkey: StackExchange.options.user.fkey
                   }
                })
          .done(resolve)
@@ -82,7 +83,7 @@
                   url: `https://${location.hostname}/flags/questions/${pid}/close/add`,
                   data:
                   {
-                     'fkey': fkey,
+                     'fkey': StackExchange.options.user.fkey,
                      'closeReasonId': closeReasonId,
                      'duplicateOfQuestionId': (closeReasonId === 'Duplicate' ? duplicateId : null),
                      'siteSpecificCloseReasonId': (closeReasonId === 'Duplicate' ? null : siteSpecificReasonId),

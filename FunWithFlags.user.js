@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Fun With Flags
 // @description  Miscellaneous improvements to the UX for the moderator flag dashboard.
-// @version      0.1.4
+// @version      0.1.5
 // @author       Cody Gray
 // @homepage     https://github.com/codygray/so-userscripts
 //
@@ -24,10 +24,9 @@
 {
    'use strict';
 
+
    // Moderator check
    if (typeof StackExchange == "undefined" || !StackExchange.options || !StackExchange.options.user || !StackExchange.options.user.isModerator) { return; }
-
-   const fkey = StackExchange.options.user.fkey;
 
 
    function onPageLoad()
