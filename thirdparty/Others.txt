@@ -1,0 +1,9 @@
+Used:
+
+ - https://github.com/Benjol/SE-AutoReviewComments
+ - https://github.com/rjrudman/Userscripts/raw/master/Reputation%20Investigation/dist/ReputationInvestigation.user.js
+
+
+Unused:
+
+ - https://github.com/animuson/se-mod-tools-improved
