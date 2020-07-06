@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Fun With Flags
 // @description  Miscellaneous improvements to the UX for the moderator flag dashboard.
-// @version      0.1.3
+// @version      0.1.4
 // @author       Cody Gray
 // @homepage     https://github.com/codygray/so-userscripts
 //
@@ -22,50 +22,40 @@
 
 (function()
 {
-    'use strict';
+   'use strict';
 
-    // Moderator check
-    if (typeof StackExchange == "undefined" || !StackExchange.options || !StackExchange.options.user || !StackExchange.options.user.isModerator) { return; }
+   // Moderator check
+   if (typeof StackExchange == "undefined" || !StackExchange.options || !StackExchange.options.user || !StackExchange.options.user.isModerator) { return; }
 
-    const fkey = StackExchange.options.user.fkey;
+   const fkey = StackExchange.options.user.fkey;
 
 
-    function onPageLoad()
-    {
-        // While we're at it, make all comment textareas auto-grow as you type in them.
-        $('textarea.js-comment-text-input').each(function()
-        {
-            this.setAttribute('style', 'height:' + (this.scrollHeight) + 'px;overflow-y:hidden;');
-        }).on('input', function()
-        {
-            this.style.height = 'auto';
-            this.style.height = (this.scrollHeight) + 'px';
-        });
-
-        // When opening the "decline" options, pre-select the default reason and focus the submit button.
-        $('.js-resolve-action[data-type="decline"]').click(function(evt)
-        {
-            const flagOpts = $(this).closest('.js-post-flag-group, .js-post-flag-options');
-            setTimeout(() =>
+   function onPageLoad()
+   {
+      // When opening the "decline" options, pre-select the default reason and focus the submit button.
+      $('.js-resolve-action[data-type="decline"]').click(function()
+      {
+         const flagOpts = $(this).closest('.js-post-flag-group, .js-post-flag-options');
+         setTimeout(() =>
+         {
+            const opt = flagOpts.find('input[name="dismiss-reason"][value="2"]:visible').get(0);
+            if (opt)
             {
-                const opt = flagOpts.find('input[name="dismiss-reason"][value="2"]:visible').get(0);
-                if (opt)
-                {
-                    opt.click();
-                }
+               opt.click();
+            }
 
-                const btn = flagOpts.find('.js-submit-btn');
-                if (btn)
-                {
-                    btn.focus();
-                }
-            }, 100);
-        });
-    }
+            const btn = flagOpts.find('.js-submit-btn').get(0);
+            if (btn)
+            {
+               btn.focus();
+            }
+         }, 100);
+      });
+   }
 
-    function appendStyles()
-    {
-        const styles = `
+   function appendStyles()
+   {
+      const styles = `
 <style>
 /* Compress the flagged post boxes to save screen space. */
 .js-flagged-post {
@@ -147,10 +137,10 @@
 }
 </style>
 `;
-        $('body').append(styles);
-    }
+      $('body').append(styles);
+   }
 
 
-    appendStyles();
-    onPageLoad();
+   appendStyles();
+   onPageLoad();
 })();
