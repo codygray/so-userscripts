@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Prolix
 // @description  Improve site UX for particularly long-winded users and their allies.
-// @version      0.2.0
+// @version      0.2.1
 // @author       Cody Gray
 // @homepage     https://github.com/codygray/so-userscripts
 //
@@ -96,6 +96,16 @@ body .answer-hyperlink:visited {
     color: ${isMeta ? '#848586' : '#5C08C3'};
 }
 
+/* Undo stupid Stacks style that hides the scrollbar arrows. */
+.s-input, .s-textarea {
+   scrollbar-color: inherit !important;
+}
+
+/* Undo stupid Stacks style that hides the drop-down indicator on drop-down combo boxes. */
+.s-select {
+   -webkit-appearance: auto !important;
+}
+
 /* VOTING CONTAINER: */
 
 /* Make voting arrows and other sidebar content "sticky", so that it scrolls with long posts. */
@@ -106,11 +116,6 @@ body .answer-hyperlink:visited {
 }
 
 /* COMMENTS: */
-
-/* Undo stupid Stacks style that hides the scrollbar arrows. */
-.s-input, .s-textarea {
-   scrollbar-color: inherit !important;
-}
 
 /* Since this textarea is auto-expanding, no need for scrollbar arrows. */
 .comment-form textarea.js-comment-text-input {
