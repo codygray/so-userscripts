@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Fun With Flags
 // @description  Miscellaneous improvements to the UX for the moderator flag dashboard.
-// @version      0.1.6
+// @version      0.1.7
 // @author       Cody Gray
 // @homepage     https://github.com/codygray/so-userscripts
 //
@@ -31,6 +31,29 @@
 
    function onPageLoad()
    {
+      // On the "contact user" page, remove the silly extra step of clicking the link just to show a
+      // pop-up dialog containing a menu of options, since this is ALWAYS done each and every time
+      // that one navigates to this page.
+      if (window.location.pathname.startsWith('/users/message/create/'))
+      {
+         const link = $('#show-templates');
+         link.click();
+         setTimeout(() =>
+         {
+            // Attempt to find the pop-up dialog, which is inserted into the DOM after the link.
+            const popup = link.next();
+            if ((popup.length == 1) && popup.hasClass('popup'))
+            {
+               // Hide the pop-up dialog, including the border and the close button.
+               popup.hide();
+
+               // Insert the contents of the pop-up inline, replacing the link.
+               const popupContents = popup.find('#pane-main').parent();
+               link.replaceWith(popupContents);
+            }
+         }, 100);
+      }
+
       // When multiple users have raised the same flag, they are listed in a comma-separated list.
       // Break this list onto new lines at the commas, and indent each new line by a fixed amount.
       // (The indented lines won't line up with anything above them, but they'll be obviously indented.)
