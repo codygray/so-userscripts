@@ -44,12 +44,16 @@
             const popup = link.next();
             if ((popup.length == 1) && popup.hasClass('popup'))
             {
-               // Hide the pop-up dialog, including the border and the close button.
-               popup.hide();
+               // Remove the "popup" style (so that the dialog doesn't get hidden/dismissed when the user clicks
+               // elsewhere on the page, and also to remove some, but not all, inapplicable styles).
+               popup.removeClass('popup');
 
-               // Insert the contents of the pop-up inline, replacing the link.
-               const popupContents = popup.find('#pane-main').parent();
-               link.replaceWith(popupContents);
+               // Style the pop-up dialog so that it appears inline, hide inapplicable UI elements,
+               // and finally insert it in place of the link.
+               popup.attr('style', 'display: inline; position: inherit;');
+               popup.find('.popup-close').hide();
+               popup.find('.popup-actions-cancel').hide();
+               link.replaceWith(popup);
             }
          }, 100);
       }
