@@ -53,21 +53,29 @@
    }
 
 
+   function resizeCommentTextarea(element)
+   {
+      const $element = $(element);
+      const marginT = parseInt($element.css('margin-top'));
+      const marginB = parseInt($element.css('margin-bottom'));
+      if (element.scrollHeight > element.clientHeight)
+      {
+         element.style.height = `${element.scrollHeight + marginT + marginB}px`;
+      }
+   }
+
    function onPageLoad()
    {
-      // Make all comment textareas auto-expand vertically as lines of text
+      // Make all comment textareas auto-expand vertically to fit their text, both upon
+      // initial appearance (e.g., clicking "edit") and when composing as lines of text
       // are added that overflow the currently visible area.
-      onElementInserted('.comment-form', 'textarea.js-comment-text-input', function(element)
+      onElementInserted('.comments', 'textarea[name="comment"].js-comment-text-input', function(element)
       {
-         $(element).on('input', function()
+         const textarea = $(element);
+         resizeCommentTextarea(element);
+         textarea.on('input', function()
          {
-            const $this = $(this);
-            const marginT = parseInt($this.css('margin-top'));
-            const marginB = parseInt($this.css('margin-bottom'));
-            if (this.scrollHeight > this.clientHeight)
-            {
-               this.style.height = `${this.scrollHeight + marginT + marginB}px`;
-            }
+            resizeCommentTextarea(this);
          });
       });
    }
@@ -96,16 +104,6 @@ body .answer-hyperlink:visited {
     color: ${isMeta ? '#848586' : '#5C08C3'};
 }
 
-/* Undo stupid Stacks style that hides the scrollbar arrows. */
-.s-input, .s-textarea {
-   scrollbar-color: inherit !important;
-}
-
-/* Undo stupid Stacks style that hides the drop-down indicator on drop-down combo boxes. */
-.s-select {
-   -webkit-appearance: auto !important;
-}
-
 /* VOTING CONTAINER: */
 
 /* Make voting arrows and other sidebar content "sticky", so that it scrolls with long posts. */
@@ -116,6 +114,11 @@ body .answer-hyperlink:visited {
 }
 
 /* COMMENTS: */
+
+/* Undo stupid Stacks style that hides the scrollbar arrows. */
+.s-input, .s-textarea {
+   scrollbar-color: inherit !important;
+}
 
 /* Since this textarea is auto-expanding, no need for scrollbar arrows. */
 .comment-form textarea.js-comment-text-input {
