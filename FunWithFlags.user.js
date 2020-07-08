@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Fun With Flags
 // @description  Miscellaneous improvements to the UX for the moderator flag dashboard.
-// @version      0.1.5
+// @version      0.1.6
 // @author       Cody Gray
 // @homepage     https://github.com/codygray/so-userscripts
 //
@@ -31,6 +31,19 @@
 
    function onPageLoad()
    {
+      // When multiple users have raised the same flag, they are listed in a comma-separated list.
+      // Break this list onto new lines at the commas, and indent each new line by a fixed amount.
+      // (The indented lines won't line up with anything above them, but they'll be obviously indented.)
+      $('.js-post-flag-group .js-flag-text span.relativetime-clean').each(function()
+      {
+         const nextElem = this.nextSibling;
+         if (nextElem.nodeValue.trim() == ',')
+         {
+            $(nextElem).replaceWith(',<br>');
+            this.nextSibling.nextSibling.nextSibling.style.marginLeft = '32px';
+         }
+      });
+
       // When opening the "decline" options, pre-select the default reason and focus the submit button.
       $('.js-resolve-action[data-type="decline"]').click(function()
       {
