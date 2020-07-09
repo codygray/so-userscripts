@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Fun With Flags
 // @description  Miscellaneous improvements to the UX for the moderator flag dashboard.
-// @version      0.1.7
+// @version      0.1.8
 // @author       Cody Gray
 // @homepage     https://github.com/codygray/so-userscripts
 //
@@ -29,33 +29,86 @@
    if (typeof StackExchange == "undefined" || !StackExchange.options || !StackExchange.options.user || !StackExchange.options.user.isModerator) { return; }
 
 
+   function updateSuspensionSubmitButton()
+   {
+      // Update the submit button for the "contact user" form, changing the text label
+      // and the style/color to reflect the action that will be taken.
+      const button = $('#submit-button');
+      if ($('#suspendUser').get(0).checked)
+      {
+         button.text(`Notify and Suspend User for ${$('#suspendDays').val()} Day(s)`);
+         button.removeClass('s-btn__primary');
+         button.addClass('s-btn__danger s-btn__filled');
+      }
+      else
+      {
+         button.text('Notify User');
+         button.removeClass('s-btn__danger s-btn__filled');
+         button.addClass('s-btn__primary');
+      }
+   }
+
    function onPageLoad()
    {
-      // On the "contact user" page, remove the silly extra step of clicking the link just to show a
-      // pop-up dialog containing a menu of options, since this is ALWAYS done each and every time
-      // that one navigates to this page.
-      if (window.location.pathname.startsWith('/users/message/create/'))
+      // On the "contact user" and/or "contact CM" pages, remove the silly extra step of
+      // clicking the link just to show a pop-up dialog containing a menu of options,
+      // since this is ALWAYS done each and every time that one navigates to these pages.
+      if (window.location.pathname.startsWith('/users/message/create/') ||
+          window.location.pathname.startsWith('/admin/cm-message/create/'))
       {
          const link = $('#show-templates');
          link.click();
-         setTimeout(() =>
-         {
-            // Attempt to find the pop-up dialog, which is inserted into the DOM after the link.
-            const popup = link.next();
-            if ((popup.length == 1) && popup.hasClass('popup'))
-            {
-               // Remove the "popup" style (so that the dialog doesn't get hidden/dismissed when the user clicks
-               // elsewhere on the page, and also to remove some, but not all, inapplicable styles).
-               popup.removeClass('popup');
 
-               // Style the pop-up dialog so that it appears inline, hide inapplicable UI elements,
-               // and finally insert it in place of the link.
-               popup.attr('style', 'display: inline; position: inherit;');
-               popup.find('.popup-close').hide();
-               popup.find('.popup-actions-cancel').hide();
-               link.replaceWith(popup);
+         if (window.location.pathname.startsWith('/users/message/create/'))
+         {
+            // Find the suspend checkbox, and if it exists, add a handler to it
+            // that will update the submit button when its value changes.
+            const suspendCheckbox = $('#suspendUser');
+            suspendCheckbox.on('change', function()
+            {
+               updateSuspensionSubmitButton();
+            });
+         }
+
+         $(document).ajaxComplete(function(event, xhr, settings)
+         {
+            if (settings.url.startsWith('/admin/contact-user/template-popup/') ||
+                settings.url.startsWith('/admin/contact-cm/template-popup/'))
+            {
+               // Attempt to find the pop-up dialog, which is inserted into the DOM after the link.
+               const popup = link.next();
+               if ((popup.length == 1) && popup.hasClass('popup'))
+               {
+                  // Remove the "popup" style (so that the dialog doesn't get hidden/dismissed when the user clicks
+                  // elsewhere on the page, and also to remove some, but not all, inapplicable styles).
+                  popup.removeClass('popup');
+
+                  // Style the pop-up dialog so that it appears inline, hide inapplicable UI elements,
+                  // and finally insert it in place of the link.
+                  popup.attr('style', 'display: inline; position: inherit;');
+                  popup.find('.popup-close').hide();
+                  popup.find('.popup-actions-cancel').hide();
+                  link.replaceWith(popup);
+
+                  if (settings.url.startsWith('/admin/contact-user/template-popup/'))
+                  {
+                     // Attach an event handler to the submit button's click event that will update the
+                     // next submit button (the one that applies a suspension). This takes care of the
+                     // fact that certain of the canned reasons default to applying a suspension.
+                     $('#pane-main + .popup-actions .popup-submit').click(function()
+                     {
+                        updateSuspensionSubmitButton();
+                     });
+
+                     // Also update the text of the submit button whenever the suspension duration changes.
+                     $('#suspendDays, .suspend-info input[name="suspend-choice"]').on('change', function()
+                     {
+                        updateSuspensionSubmitButton();
+                     });
+                  }
+               }
             }
-         }, 100);
+         });
       }
 
       // When multiple users have raised the same flag, they are listed in a comma-separated list.
