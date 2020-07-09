@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Fun With Flags
 // @description  Miscellaneous improvements to the UX for the moderator flag dashboard.
-// @version      0.1.8
+// @version      0.1.9
 // @author       Cody Gray
 // @homepage     https://github.com/codygray/so-userscripts
 //
@@ -111,6 +111,10 @@
          });
       }
 
+      // Apply a distinct background to the actual flag text (the part typed by the user) in order
+      // to make it stand out better. To do this, we'll identify it, then add a style class.
+      $('.js-flag-text').html((i, html) => html.replace(/^(.*) - </i, `<span class="cg-user-flag-text">$1</span> - <`));
+
       // When multiple users have raised the same flag, they are listed in a comma-separated list.
       // Break this list onto new lines at the commas, and indent each new line by a fixed amount.
       // (The indented lines won't line up with anything above them, but they'll be obviously indented.)
@@ -219,6 +223,13 @@
 /* Hide the quick-action buttons that I never use. */
 .js-post-flag-options > div > button {
     display: none;
+}
+
+
+/* Styles for classes that we applied. */
+.cg-user-flag-text {
+    background-color: var(--powder-100);
+    padding: 2px 0 !important;
 }
 
 
