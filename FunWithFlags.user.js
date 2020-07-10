@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Fun With Flags
 // @description  Miscellaneous improvements to the UX for the moderator flag dashboard.
-// @version      0.1.12
+// @version      0.1.13
 // @author       Cody Gray
 // @homepage     https://github.com/codygray/so-userscripts
 //
@@ -68,7 +68,7 @@
 
             // Make the hidden "suspendReason" input parameter visible.
             const suspendReasonInput = $('#suspendReason');
-            suspendReasonInput.removeAttr('type');
+            suspendReasonInput.attr('type', 'text');
             suspendReasonInput.wrap('<div id="cg-suspend-reason"></div>');
             const suspendReasonContainer = $('#cg-suspend-reason');
             suspendReasonContainer.prepend('<label for="suspendReason" id="cg-suspend-reason-desc">Brief suspension reason to display publicly on user profile:</span>');
@@ -256,7 +256,7 @@
    display: flex;
 }
 #cg-suspend-reason-desc {
-   padding: 7px 6px 0 0;
+   padding: 14px 6px 0 0;
 }
 #suspendReason {
    flex: 1;
