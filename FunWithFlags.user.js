@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Fun With Flags
 // @description  Miscellaneous improvements to the UX for the moderator flag dashboard.
-// @version      0.1.11
+// @version      0.1.12
 // @author       Cody Gray
 // @homepage     https://github.com/codygray/so-userscripts
 //
@@ -243,7 +243,7 @@
 
 /* Styles for classes that we applied. */
 .cg-user-flag-text {
-    background-color: var(--powder-100);
+    background-color: var(--yellow-050);
     padding: 2px 0 !important;
 }
 
