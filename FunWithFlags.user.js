@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Fun With Flags
 // @description  Miscellaneous improvements to the UX for the moderator flag dashboard.
-// @version      0.1.9
+// @version      0.1.10
 // @author       Cody Gray
 // @homepage     https://github.com/codygray/so-userscripts
 //
@@ -29,14 +29,17 @@
    if (typeof StackExchange == "undefined" || !StackExchange.options || !StackExchange.options.user || !StackExchange.options.user.isModerator) { return; }
 
 
-   function updateSuspensionSubmitButton()
+   function updateSuspensionControls()
    {
+      const suspend = !!($('#suspendUser').get(0).checked);
+
       // Update the submit button for the "contact user" form, changing the text label
       // and the style/color to reflect the action that will be taken.
       const button = $('#submit-button');
-      if ($('#suspendUser').get(0).checked)
+      if (suspend)
       {
-         button.text(`Notify and Suspend User for ${$('#suspendDays').val()} Day(s)`);
+         const days = $('#suspendDays').val();
+         button.text(`Notify and Suspend User for ${days} Day${(days != 1) ? 's' : ''}`);
          button.removeClass('s-btn__primary');
          button.addClass('s-btn__danger s-btn__filled');
       }
@@ -46,11 +49,14 @@
          button.removeClass('s-btn__danger s-btn__filled');
          button.addClass('s-btn__primary');
       }
+
+      // Update the display of the suspension reason.
+      $('#cg-suspend-reason').toggle(suspend);
    }
 
    function onPageLoad()
    {
-      // On the "contact user" and/or "contact CM" pages, remove the silly extra step of
+      // On the "contact user" and/or "contact CM" pages, skip the silly extra step of
       // clicking the link just to show a pop-up dialog containing a menu of options,
       // since this is ALWAYS done each and every time that one navigates to these pages.
       if (window.location.pathname.startsWith('/users/message/create/') ||
@@ -61,12 +67,19 @@
 
          if (window.location.pathname.startsWith('/users/message/create/'))
          {
-            // Find the suspend checkbox, and if it exists, add a handler to it
-            // that will update the submit button when its value changes.
             const suspendCheckbox = $('#suspendUser');
+
+            // Make the hidden "suspendReason" input parameter visible.
+            const suspendReasonInput = $('#suspendReason');
+            suspendReasonInput.removeAttr('type');
+            suspendReasonInput.wrap('<div id="cg-suspend-reason"></div>');
+            const suspendReasonContainer = $('#cg-suspend-reason');
+            suspendReasonContainer.prepend('<label for="suspendReason" id="cg-suspend-reason-desc">Brief suspension reason to display publicly on user profile:</span>');
+
+            // Add a handler to the suspend checkbox that will fire upon state changes.
             suspendCheckbox.on('change', function()
             {
-               updateSuspensionSubmitButton();
+               updateSuspensionControls();
             });
          }
 
@@ -95,15 +108,15 @@
                      // Attach an event handler to the submit button's click event that will update the
                      // next submit button (the one that applies a suspension). This takes care of the
                      // fact that certain of the canned reasons default to applying a suspension.
-                     $('#pane-main + .popup-actions .popup-submit').click(function()
+                     $('#pane-main + .popup-actions .popup-submit').on('click', function()
                      {
-                        updateSuspensionSubmitButton();
+                        updateSuspensionControls();
                      });
 
                      // Also update the text of the submit button whenever the suspension duration changes.
                      $('#suspendDays, .suspend-info input[name="suspend-choice"]').on('change', function()
                      {
-                        updateSuspensionSubmitButton();
+                        updateSuspensionControls();
                      });
                   }
                }
@@ -230,6 +243,21 @@
 .cg-user-flag-text {
     background-color: var(--powder-100);
     padding: 2px 0 !important;
+}
+
+
+/* Contact user/CM messages: */
+#cg-suspend-reason {
+   display: flex;
+}
+#cg-suspend-reason-desc {
+   padding: 7px 6px 0 0;
+}
+#suspendReason {
+   flex: 1;
+}
+#copyPanel label[for="suspendUser"] {
+   margin-right: 6px;  /* give some breathing room */
 }
 
 
