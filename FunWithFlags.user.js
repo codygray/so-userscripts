@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Fun With Flags
 // @description  Miscellaneous improvements to the UX for the moderator flag dashboard.
-// @version      0.1.10
+// @version      0.1.11
 // @author       Cody Gray
 // @homepage     https://github.com/codygray/so-userscripts
 //
@@ -62,9 +62,6 @@
       if (window.location.pathname.startsWith('/users/message/create/') ||
           window.location.pathname.startsWith('/admin/cm-message/create/'))
       {
-         const link = $('#show-templates');
-         link.click();
-
          if (window.location.pathname.startsWith('/users/message/create/'))
          {
             const suspendCheckbox = $('#suspendUser');
@@ -82,6 +79,9 @@
                updateSuspensionControls();
             });
          }
+
+         const link = $('#show-templates');
+         link.click();
 
          $(document).ajaxComplete(function(event, xhr, settings)
          {
@@ -105,11 +105,13 @@
 
                   if (settings.url.startsWith('/admin/contact-user/template-popup/'))
                   {
-                     // Attach an event handler to the submit button's click event that will update the
-                     // next submit button (the one that applies a suspension). This takes care of the
-                     // fact that certain of the canned reasons default to applying a suspension.
+                     // Attach an event handler to the submit button's click event.
                      $('#pane-main + .popup-actions .popup-submit').on('click', function()
                      {
+                        // Update the next submit button (the one that applies a suspension).
+                        // This takes care of the fact that certain of the canned reasons
+                        // default to applying a suspension, so the states of the controls
+                        // that we added must be updated accordingly.
                         updateSuspensionControls();
                      });
 
@@ -247,6 +249,9 @@
 
 
 /* Contact user/CM messages: */
+#mainbar > hr:first-child {
+   display: none;  /* hide pointless and inconsistent line at top of "contact CM" page */
+}
 #cg-suspend-reason {
    display: flex;
 }
