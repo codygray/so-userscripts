@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Fun With Flags
 // @description  Miscellaneous improvements to the UX for the moderator flag dashboard.
-// @version      0.1.14
+// @version      0.1.15
 // @author       Cody Gray
 // @homepage     https://github.com/codygray/so-userscripts
 //
@@ -306,7 +306,7 @@
    display: block;
    padding: 9px;
    background: var(--green-050);
-   border: solid 1px var(--green-300);
+   border: solid 1px var(--green-200);
    border-radius: 3px;
    color: var(--green-700);
    font-size: 110%;
