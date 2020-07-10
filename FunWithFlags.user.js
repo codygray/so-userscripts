@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Fun With Flags
 // @description  Miscellaneous improvements to the UX for the moderator flag dashboard.
-// @version      0.1.13
+// @version      0.1.14
 // @author       Cody Gray
 // @homepage     https://github.com/codygray/so-userscripts
 //
@@ -19,6 +19,11 @@
 // @exclude      *blog.*
 // @exclude      https://stackoverflow.com/c/*
 // ==/UserScript==
+
+// Note: Some of the functionality here is inspired by and/or adapted from Samuel Liew's ModMessageHelper script
+//       (https://github.com/samliew/SO-mod-userscripts/blob/master/ModMessageHelper.user.js).
+//       One of the things it implements that this doesn't is the ability to pass a URL slug to pre-select a
+//       template.
 
 (function()
 {
@@ -56,30 +61,72 @@
 
    function onPageLoad()
    {
-      // On the "contact user" and/or "contact CM" pages, skip the silly extra step of
-      // clicking the link just to show a pop-up dialog containing a menu of options,
-      // since this is ALWAYS done each and every time that one navigates to these pages.
+      // Customize the "contact user" page in all of its forms (creation and reply).
+      if (window.location.pathname.startsWith('/users/message/'))
+      {
+         // Prevent the page from automatically being scrolled to the bottom,
+         // with the compose message editor focused.
+         window.scrollTo(0, 0);
+         $('#wmd-input').blur();
+
+         // Remove chat from the sidebar.
+         $('.js-chat-ad-rooms').closest('.s-sidebarwidget').remove();
+
+         // Make the hidden email input parameter visible as a checkbox.
+         const emailInput = $('#send-email');
+         emailInput.attr('type', 'checkbox');
+         emailInput.wrap('<label for="send-email" id="cg-send-email">send email:</label>');
+         // Prepare alternate warning message for when email is disabled:
+         $('#to_warning').after(`<div id="to_warning_noemail" class="system-alert">The user will only see this message on ${StackExchange.options.site.name}.</div>`);
+         emailInput.on('change', function()
+         {
+            $('#to_warning').toggleClass('hidden', !this.checked);
+         });
+      }
+
+      // Customize the "contact user -> create" page.
+      if (window.location.pathname.startsWith('/users/message/create/'))
+      {
+         // Make the hidden "templateName" input parameter visible as a textbox.
+         const templateNameInput = $('#templateName');
+         templateNameInput.attr('type', 'text');
+         templateNameInput.addClass('s-input');
+         templateNameInput.wrap('<label for="templateName" id="cg-template-name">template name:</label>');
+
+         // Make the hidden "templateEdited" input parameter visible as a checkbox.
+         const editedInput = $('#templateEdited');
+         editedInput.attr('type', 'checkbox');
+         editedInput.wrap('<label for="templateEdited" id="cg-template-edited">edited?</label>');
+
+         // Make the hidden "suspendReason" input parameter visible as a textbox,
+         // and move it to a more logical position.
+         const suspendReasonInput = $('#suspendReason');
+         suspendReasonInput.attr('type', 'text');
+         suspendReasonInput.addClass('s-input');
+         suspendReasonInput.wrap('<label for="suspendReason" id="cg-suspend-reason" title="Brief suspension reason that will be displayed publicly on the user&rsquo;s profile.">public suspension reason:</label>');
+         $('#copyPanel div.suspend-info').after($('#cg-suspend-reason'));
+
+         // Add a handler to the suspend checkbox that will fire upon state changes
+         // to update the affected controls.
+         const suspendCheckbox = $('#suspendUser');
+         suspendCheckbox.on('change', function()
+         {
+            updateSuspensionControls();
+         });
+
+         // Improve the custom number-of-days supension field by making it a numeric control
+         // and enforcing a maximum of 365 days (the form fails rudely for values > 365).
+         const suspensionDays = $('#suspendDays');
+         suspensionDays.attr({'type': 'number', 'max': '365'});
+         suspensionDays.addClass('s-input');
+      }
+
+      // On the "contact user -> create" and/or "contact CM -> create" pages, bypass the
+      // silly extra step requiring clicking the link just to show a pop-up dialog that
+      // contains a menu of options, since this is ALWAYS done every time on these pages.
       if (window.location.pathname.startsWith('/users/message/create/') ||
           window.location.pathname.startsWith('/admin/cm-message/create/'))
       {
-         if (window.location.pathname.startsWith('/users/message/create/'))
-         {
-            const suspendCheckbox = $('#suspendUser');
-
-            // Make the hidden "suspendReason" input parameter visible.
-            const suspendReasonInput = $('#suspendReason');
-            suspendReasonInput.attr('type', 'text');
-            suspendReasonInput.wrap('<div id="cg-suspend-reason"></div>');
-            const suspendReasonContainer = $('#cg-suspend-reason');
-            suspendReasonContainer.prepend('<label for="suspendReason" id="cg-suspend-reason-desc">Brief suspension reason to display publicly on user profile:</span>');
-
-            // Add a handler to the suspend checkbox that will fire upon state changes.
-            suspendCheckbox.on('change', function()
-            {
-               updateSuspensionControls();
-            });
-         }
-
          const link = $('#show-templates');
          link.click();
 
@@ -88,6 +135,9 @@
             if (settings.url.startsWith('/admin/contact-user/template-popup/') ||
                 settings.url.startsWith('/admin/contact-cm/template-popup/'))
             {
+               // Only run this event once: once executed, unbind it.
+               $(event.currentTarget).unbind('ajaxComplete');
+
                // Attempt to find the pop-up dialog, which is inserted into the DOM after the link.
                const popup = link.next();
                if ((popup.length == 1) && popup.hasClass('popup'))
@@ -126,8 +176,8 @@
          });
       }
 
-      // Apply a distinct background to the actual flag text (the part typed by the user) in order
-      // to make it stand out better. To do this, we'll identify it, then add a style class.
+      // Apply a distinct background to the actual flag text (the part typed by the user)
+      // to make it stand out better. This is done by identifying and making it stylable.
       $('.js-flag-text').html((i, html) => html.replace(/^(.*) - </i, `<span class="cg-user-flag-text">$1</span> - <`));
 
       // When multiple users have raised the same flag, they are listed in a comma-separated list.
@@ -252,17 +302,68 @@
 #mainbar > hr:first-child {
    display: none;  /* hide pointless and inconsistent line at top of "contact CM" page */
 }
-#cg-suspend-reason {
+#mainbar > div:first-child > span.revision-comment:first-child {
+   display: block;
+   padding: 9px;
+   background: var(--green-050);
+   border: solid 1px var(--green-300);
+   border-radius: 3px;
+   color: var(--green-700);
+   font-size: 110%;
+}
+#msg-form #to_warning,
+#msg-form #to_warning_noemail {
+   margin-bottom: 0;
+}
+#msg-form #to_warning_noemail {
+    display: none;
+   line-height: 100%;
+}
+#msg-form #to_warning,
+#msg-form #to_warning.hidden + #to_warning_noemail {
+   display: inline-block;
+}
+#msg-form #cg-send-email {
+   display: block;
+}
+#msg-form #send-email {
+   margin-left: 6px;
+}
+#msg-form #suspendDays {
+   margin: 0 0 0 3px;
+   padding: 4px;
+   font-size: inherit;
+   width: 75px;
+}
+#msg-form #copyPanel div.suspend-info b {
+   color: var(--red);
+}
+#msg-form #cg-suspend-reason,
+#msg-form #cg-template-name {
    display: flex;
+   line-height: 44px;  /* vertically align with textbox */
 }
-#cg-suspend-reason-desc {
-   padding: 14px 6px 0 0;
+#msg-form #cg-template-name {
+   margin-top: 30px;
 }
-#suspendReason {
+#msg-form #suspendReason,
+#msg-form #templateName {
    flex: 1;
+   width: 100%;
+   margin: 6px 0 6px 6px;
+   font-size: inherit;
 }
-#copyPanel label[for="suspendUser"] {
+#msg-form #copyPanel label[for="suspendUser"] {
    margin-right: 6px;  /* give some breathing room */
+}
+#msg-form #cg-template-edited {
+   float: right;
+}
+#msg-form #templateEdited {
+   margin: 0 0 5px 6px;
+}
+#msg-form #copyPanel #wmd-input {
+    min-height: 600px;
 }
 
 
