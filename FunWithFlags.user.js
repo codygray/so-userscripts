@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Fun With Flags
 // @description  Miscellaneous improvements to the UX for the moderator flag dashboard.
-// @version      0.1.15
+// @version      0.1.16
 // @author       Cody Gray
 // @homepage     https://github.com/codygray/so-userscripts
 //
@@ -183,7 +183,7 @@
       // When multiple users have raised the same flag, they are listed in a comma-separated list.
       // Break this list onto new lines at the commas, and indent each new line by a fixed amount.
       // (The indented lines won't line up with anything above them, but they'll be obviously indented.)
-      $('.js-post-flag-group .js-flag-text span.relativetime-clean').each(function()
+      $('.js-flagged-post .js-flag-text span.relativetime-clean').each(function()
       {
          const nextElem = this.nextSibling;
          if (nextElem.nodeValue.trim() == ',')
