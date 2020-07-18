@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Prolix
 // @description  Improve site UX for particularly long-winded users and their allies.
-// @version      0.2.1
+// @version      0.2.2
 // @author       Cody Gray
 // @homepage     https://github.com/codygray/so-userscripts
 //
