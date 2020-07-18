@@ -69,7 +69,7 @@
       // Make all comment textareas auto-expand vertically to fit their text, both upon
       // initial appearance (e.g., clicking "edit") and when composing as lines of text
       // are added that overflow the currently visible area.
-      onElementInserted('.js-comment-form-layout', 'textarea[name="comment"].js-comment-text-input', function(element)
+      onElementInserted('.js-comment', 'textarea[name="comment"].js-comment-text-input', function(element)
       {
          const textarea = $(element);
          resizeCommentTextarea(element);
