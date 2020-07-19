@@ -183,7 +183,7 @@
       // overrides the color set by the "s-btn__danger" style, due to the order of the style definitions.
       // Sigh, Stacks has regressed web best practices by at least 10 years.
       const declineBtns = $('button[data-type="decline"]');
-      declineBtns.addStyle('s-btn__danger');
+      declineBtns.addClass('s-btn__danger');
       declineBtns.css('color', 'var(--red-600)');
 
       // Apply a distinct background to the actual flag text (the part typed by the user)
