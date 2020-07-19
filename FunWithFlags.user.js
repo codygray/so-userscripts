@@ -178,11 +178,13 @@
 
       // Apply the "danger" class styling to all "decline" buttons
       // (effectively making them red and visually distinct from "helpful" buttons).
-      // Note that we cannot simply add the "s-btn__danger" style to the list of styles, since some of the
+      // Note that we cannot merely add the "s-btn__danger" style to the list of styles, since some of the
       // buttons are styled with "s-btn__link", which sets the color back to the default, and that always
       // overrides the color set by the "s-btn__danger" style, due to the order of the style definitions.
       // Sigh, Stacks has regressed web best practices by at least 10 years.
-      $('button[data-type="decline"]').css('color', 'var(--red-600)');
+      const declineBtns = $('button[data-type="decline"]');
+      declineBtns.addStyle('s-btn__danger');
+      declineBtns.css('color', 'var(--red-600)');
 
       // Apply a distinct background to the actual flag text (the part typed by the user)
       // to make it stand out better. This is done by identifying and making it stylable.
