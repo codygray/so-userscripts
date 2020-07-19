@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Fun With Flags
 // @description  Miscellaneous improvements to the UX for the moderator flag dashboard.
-// @version      0.1.16
+// @version      0.1.17
 // @author       Cody Gray
 // @homepage     https://github.com/codygray/so-userscripts
 //
@@ -175,6 +175,14 @@
             }
          });
       }
+
+      // Apply the "danger" class styling to all "decline" buttons
+      // (effectively making them red and visually distinct from "helpful" buttons).
+      // Note that we cannot simply add the "s-btn__danger" style to the list of styles, since some of the
+      // buttons are styled with "s-btn__link", which sets the color back to the default, and that always
+      // overrides the color set by the "s-btn__danger" style, due to the order of the style definitions.
+      // Sigh, Stacks has regressed web best practices by at least 10 years.
+      $('button[data-type="decline"]').css('color', 'var(--red-600)');
 
       // Apply a distinct background to the actual flag text (the part typed by the user)
       // to make it stand out better. This is done by identifying and making it stylable.
