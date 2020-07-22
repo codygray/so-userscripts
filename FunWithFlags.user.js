@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Fun With Flags
 // @description  Miscellaneous improvements to the UX for the moderator flag dashboard.
-// @version      0.1.17
+// @version      0.1.18
 // @author       Cody Gray
 // @homepage     https://github.com/codygray/so-userscripts
 //
@@ -282,7 +282,6 @@
     border: none;
     box-shadow: none;
     padding: 0;
-    position: unset;
     min-width: unset;
     max-width: unset;
     width: auto !important;
@@ -298,6 +297,30 @@
 /* Hide the quick-action buttons that I never use. */
 .js-post-flag-options > div > button {
     display: none;
+}
+
+/* Strip the "decline and delete" button from the pop-up menu to save a click. */
+.js-comment-flag-options button.s-btn[data-controller="s-popover"] {
+    display: none;
+}
+.js-comment-flag-options .js-dismiss-flags + div.grid--cell {
+    display: none;
+}
+.js-comment-flag-options button.s-btn[data-controller="s-popover"] + .s-popover {
+    display: block !important;
+    background: 0;
+    border: none;
+    box-shadow: none;
+    min-width: unset !important;
+    max-width: unset !important;
+    width: auto !important;
+    z-index: unset !important;
+    margin: 0;
+    padding: 0;
+}
+.js-comment-flag-options button.s-btn[data-controller="s-popover"] + .s-popover > .js-delete-and-dismiss-flags {
+    top: 16px;
+    left: 17px;
 }
 
 
