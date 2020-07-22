@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Prolix
 // @description  Improve site UX for particularly long-winded users and their allies.
-// @version      0.2.2
+// @version      0.2.3
 // @author       Cody Gray
 // @homepage     https://github.com/codygray/so-userscripts
 //
@@ -69,7 +69,7 @@
       // Make all comment textareas auto-expand vertically to fit their text, both upon
       // initial appearance (e.g., clicking "edit") and when composing as lines of text
       // are added that overflow the currently visible area.
-      onElementInserted('.js-comment', 'textarea[name="comment"].js-comment-text-input', function(element)
+      onElementInserted('.js-comments-list', 'textarea[name="comment"].js-comment-text-input', function(element)
       {
          const textarea = $(element);
          resizeCommentTextarea(element);
