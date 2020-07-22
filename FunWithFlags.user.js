@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Fun With Flags
 // @description  Miscellaneous improvements to the UX for the moderator flag dashboard.
-// @version      0.1.18
+// @version      0.1.19
 // @author       Cody Gray
 // @homepage     https://github.com/codygray/so-userscripts
 //
@@ -32,6 +32,32 @@
 
    // Moderator check
    if (typeof StackExchange == "undefined" || !StackExchange.options || !StackExchange.options.user || !StackExchange.options.user.isModerator) { return; }
+
+   function onElementInserted(containerSelector, elementSelector, callback)
+   {
+      const onMutationsObserved = function(mutations)
+      {
+         mutations.forEach(function(mutation)
+         {
+            if (mutation.addedNodes.length)
+            {
+               const elements = $(mutation.addedNodes).find(elementSelector);
+               for (var i = 0, len = elements.length; i < len; ++i)
+               {
+                  callback(elements[i]);
+               }
+            }
+         });
+      };
+      const MutationObserver = (window.MutationObserver || window.WebKitMutationObserver);
+      const observer = new MutationObserver(onMutationsObserved);
+      const config = { childList: true, subtree: true };
+      const container = $(containerSelector);
+      for (var i = 0, len = container.length; i < len; ++i)
+      {
+         observer.observe(container[i], config);
+      }
+   }
 
 
    function updateSuspensionControls()
@@ -221,6 +247,15 @@
                btn.focus();
             }
          }, 100);
+      });
+
+      // When opening the "reopen" pop-up modal dialog, pre-select the default submit/OK button,
+      // rather than the cancel button, in order to enable dismissal by typing Enter.
+      onElementInserted('body.question-page', '.s-modal--footer', function(element)
+      {
+         const $this = $(element);
+         $this.find('button.js-cancel-button.js-modal-close').removeClass('js-modal-initial-focus');
+         $this.find('button.js-ok-button.s-btn__primary').addClass('js-modal-initial-focus');
       });
    }
 
