@@ -334,7 +334,7 @@
     display: none;
 }
 
-/* Strip the "decline and delete" button from the pop-up menu to save a click. */
+/* Strip the "decline and delete" button from the pop-up menu to save a click.
 .js-comment-flag-options button.s-btn[data-controller="s-popover"] {
     display: none;
 }
@@ -357,6 +357,7 @@
     top: 16px;
     left: 17px;
 }
+*/
 
 
 /* Styles for classes that we applied. */
