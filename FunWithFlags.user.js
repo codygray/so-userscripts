@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Fun With Flags
 // @description  Miscellaneous improvements to the UX for the moderator flag dashboard.
-// @version      0.1.19
+// @version      0.1.20
 // @author       Cody Gray
 // @homepage     https://github.com/codygray/so-userscripts
 //
@@ -208,9 +208,17 @@
       // buttons are styled with "s-btn__link", which sets the color back to the default, and that always
       // overrides the color set by the "s-btn__danger" style, due to the order of the style definitions.
       // Sigh, Stacks has regressed web best practices by at least 10 years.
-      const declineBtns = $('button[data-type="decline"]');
-      declineBtns.addClass('s-btn__danger');
-      declineBtns.css('color', 'var(--red-600)');
+      $('button[data-type="decline"]')
+         .addClass('s-btn__danger')
+         .css('color', 'var(--red-600)');
+
+      // Same thing for the "delete" and "decline" buttons for comment flags.
+      $('.js-comment-flag-options button.js-comment-delete')
+         .addClass('s-btn__danger')
+         .css('color', 'var(--red-600)');
+      $('.js-comment-flag-options button.js-dismiss-flags')
+         .addClass('s-btn__muted')
+         .css('color', 'var(--black-500)');
 
       // Apply a distinct background to the actual flag text (the part typed by the user)
       // to make it stand out better. This is done by identifying and making it stylable.
