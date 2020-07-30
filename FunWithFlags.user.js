@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Fun With Flags
 // @description  Miscellaneous improvements to the UX for the moderator flag dashboard.
-// @version      0.1.20
+// @version      0.1.21
 // @author       Cody Gray
 // @homepage     https://github.com/codygray/so-userscripts
 //
@@ -199,6 +199,42 @@
                   }
                }
             }
+         });
+      }
+
+      if (window.location.pathname.startsWith('/users/'))
+      {
+         // Semantically color text in profile page.
+         $(document).ajaxComplete(function(event, xhr, settings)
+         {
+            $('#user-tab-activity .history-table td a').each(function()
+            {
+               const $this = $(this);
+               const text  = $this.text();
+               if ((text === "Approve")       ||
+                   (text === "approved edit") ||
+                   (text === "Looks OK")      ||
+                   (text === "No Action Needed"))
+               {
+                  $this.addClass('fc-green-500');
+               }
+               else if ((text === "Reject")        ||
+                        (text === "rejected edit") ||
+                        (text === "Unsalvageable"))
+               {
+                  $this.addClass('fc-red-600');
+               }
+               else if ((text === "Edit") ||
+                        (text === 'Requires Editing'))
+               {
+                  $this.addClass('fc-yellow-700');
+               }
+               else if ((text === "Leave Closed") ||
+                        (text === "Leave Open"))
+               {
+                  $this.addClass('fc-black-400');
+               }
+            });
          });
       }
 
