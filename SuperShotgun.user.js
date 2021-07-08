@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Super Shotgun
 // @description  Facilitates immediate, hassle-free removal of inappropriate questions by a moderator.
-// @version      1.0.0
+// @version      1.0.1
 // @author       Cody Gray
 // @homepage     https://github.com/codygray/so-userscripts
 //
@@ -136,13 +136,13 @@
    function insertNukeButtons()
    {
       const pid = $('.question').data('questionid');
-      const qh = $('#question-header + .grid').first();
+      const qh = $('#question-header + .d-flex').first();
       if(qh.length == 0) return;
 
-      qh.find('.grid--cell:last-child').addClass('mr16');
+      qh.find('.flex--item:last-child').addClass('mr16');
 
       const nukeActions = $(`
-<div class="grid--cell ws-nowrap mb8" id="nuke-actions"><span class="fc-light mr2">Nuke As:&nbsp;</span>
+<div class="flex--item ws-nowrap mb8" id="nuke-actions"><span class="fc-light mr2">Nuke As:&nbsp;</span>
 ${!isMeta ?
 `<a class="nuke-button ws-nowrap s-btn s-btn__danger s-btn__outlined" data-reason="SiteSpecific" data-reasonid="4" title="General computer usage (e.g., Super User)" href="javascript:void(0);">User</a>
  <a class="nuke-button ws-nowrap s-btn s-btn__danger s-btn__outlined" data-reason="SiteSpecific" data-reasonid="7" title="Professional server administration (e.g., Server Fault)" href="javascript:void(0);">Server</a>
