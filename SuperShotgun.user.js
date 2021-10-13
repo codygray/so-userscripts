@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Super Shotgun
 // @description  Facilitates immediate, hassle-free removal of inappropriate questions by a moderator.
-// @version      1.0.1
+// @version      1.0.2
 // @author       Cody Gray
 // @homepage     https://github.com/codygray/so-userscripts
 //
@@ -125,7 +125,7 @@
 #nuke-actions .nuke-button {
   display: inline;
   margin: 0 0.5em 0 0;
-  padding: 0.3em 0.6em;
+  padding: 0.2em 0.5em;
   font-size: 90%;
 }
 </style>
