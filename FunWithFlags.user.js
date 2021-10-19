@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Fun With Flags
 // @description  Miscellaneous improvements to the UX for the moderator flag dashboard.
-// @version      0.1.21
+// @version      0.1.22
 // @author       Cody Gray
 // @homepage     https://github.com/codygray/so-userscripts
 //
@@ -199,6 +199,17 @@
                   }
                }
             }
+         });
+      }
+
+      if (window.location.pathname.startsWith('/review/'))
+      {
+         onElementInserted('body.review-task-page .js-review-task .js-review-content', 'ul', function(element)
+         {
+            $('a:contains("review suspended")').each(function()
+            {
+               $(this).addClass('bg-red-100');
+            });
          });
       }
 
