@@ -1,12 +1,13 @@
 // ==UserScript==
 // @name         Prolix
 // @description  Improve site UX for particularly long-winded users and their allies.
-// @version      0.2.4
+// @version      0.3.0
 // @author       Cody Gray
 // @homepage     https://github.com/codygray/so-userscripts
-//
+// @namespace    https://github.com/codygray/so-userscripts/
 // @updateURL    https://github.com/codygray/so-userscripts/raw/master/Prolix.user.js
 // @downloadURL  https://github.com/codygray/so-userscripts/raw/master/Prolix.user.js
+// @supportURL   https://github.com/codygray/so-userscripts/issues
 //
 // @include      https://*stackoverflow.com/*
 // @include      https://*serverfault.com/*
@@ -85,6 +86,15 @@
    {
       const styles = `
 <style>
+/* UNSTICKY TOP BAR: */
+body {
+    padding-top: 0;
+}
+header.top-bar {
+    position: initial;
+}
+
+
 /* REMOVE CLUTTER: */
 
 /* Remove the "Products" menu in the Stack Overflow top nav bar.
