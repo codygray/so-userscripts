@@ -87,6 +87,9 @@
       const styles = `
 <style>
 /* UNSTICKY TOP BAR: */
+html {
+    --top-bar-allocated-space: 0;
+}
 body {
     padding-top: 0;
 }
