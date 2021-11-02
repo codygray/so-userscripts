@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Prolix
 // @description  Improve site UX for particularly long-winded users and their allies.
-// @version      0.3.1
+// @version      0.3.2
 // @author       Cody Gray
 // @homepage     https://github.com/codygray/so-userscripts
 // @namespace    https://github.com/codygray/so-userscripts/
@@ -90,7 +90,8 @@
 body {
     padding-top: 0;
 }
-header.top-bar {
+header.top-bar,
+body.channels-page header.top-bar {
     position: initial !important;
 }
 
@@ -118,7 +119,7 @@ body .answer-hyperlink:visited {
 /* VOTING CONTAINER: */
 
 /* Make voting arrows and other sidebar content "sticky", so that it scrolls with long posts. */
-.js-voting-container {
+.votecell .js-voting-container {
   position: sticky;
   top: 0;
   z-index: 100;
