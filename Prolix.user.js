@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Prolix
 // @description  Improve site UX for particularly long-winded users and their allies.
-// @version      0.4.0
+// @version      0.4.1
 // @author       Cody Gray
 // @homepage     https://github.com/codygray/so-userscripts
 // @namespace    https://github.com/codygray/so-userscripts/
@@ -56,7 +56,6 @@
 
    function resizeCommentTextarea(element)
    {
-      console.log('resizing comment');
       const $element = $(element);
       const marginT = parseInt($element.css('margin-top'));
       const marginB = parseInt($element.css('margin-bottom'));
