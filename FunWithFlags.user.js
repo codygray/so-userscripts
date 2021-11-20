@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Fun With Flags
 // @description  Miscellaneous improvements to the UX for the moderator flag dashboard.
-// @version      0.1.22
+// @version      0.2.0
 // @author       Cody Gray
 // @homepage     https://github.com/codygray/so-userscripts
 //
@@ -31,7 +31,8 @@
 
 
    // Moderator check
-   if (typeof StackExchange == "undefined" || !StackExchange.options || !StackExchange.options.user || !StackExchange.options.user.isModerator) { return; }
+   if (!StackExchange?.options?.user?.isModerator) { return; }
+
 
    function onElementInserted(containerSelector, elementSelector, callback)
    {
@@ -42,7 +43,7 @@
             if (mutation.addedNodes.length)
             {
                const elements = $(mutation.addedNodes).find(elementSelector);
-               for (var i = 0, len = elements.length; i < len; ++i)
+               for (let i = 0, len = elements.length; i < len; ++i)
                {
                   callback(elements[i]);
                }
@@ -50,10 +51,10 @@
          });
       };
       const MutationObserver = (window.MutationObserver || window.WebKitMutationObserver);
-      const observer = new MutationObserver(onMutationsObserved);
-      const config = { childList: true, subtree: true };
-      const container = $(containerSelector);
-      for (var i = 0, len = container.length; i < len; ++i)
+      const observer         = new MutationObserver(onMutationsObserved);
+      const config           = { childList: true, subtree: true };
+      const container        = $(containerSelector);
+      for (let i = 0, len = container.length; i < len; ++i)
       {
          observer.observe(container[i], config);
       }
@@ -310,9 +311,73 @@
       {
          const $this = $(element);
          $this.find('button.js-cancel-button.js-modal-close').removeClass('js-modal-initial-focus');
-         $this.find('button.js-ok-button.s-btn__primary').addClass('js-modal-initial-focus');
+         $this.find('button.js-ok-button.s-btn__primary'    ).addClass   ('js-modal-initial-focus');
+      });
+
+      // When opening the "mod" menu, customize the lock options to allow more granular durations.
+      onElementInserted(document, '#se-mod-menu-action-lock-expandable', function(element)
+      {
+         document.getElementById('mod-menu-lock-duration').parentElement.remove();
+         const duration      = element.querySelector('label[for="mod-menu-lock-duration"]');
+         const container     = duration.parentElement;
+         container.innerHTML = container.innerHTML
+                             + '<div class="flex--item">'
+                             + '  <input type="number" class="s-input lh-sm" name="cg-lock-duration-numeric" id="cg-lock-duration-numeric" min="1" max="10000" step="1" value="1" />'
+                             + '</div>'
+                             + '<div class="flex--item s-select">'
+                             + '  <select name="cg-lock-duration-range" id="cg-lock-duration-range" class="js-lock-duration">'
+                             + '    <option value="1"   data-shortcut="H">hour(s)</option>'
+                             + '    <option value="24"  data-shortcut="D">day(s)</option>'
+                             + '    <option value="168" data-shortcut="W">week(s)</option>'
+                             + '    <option value="-1"  data-shortcut="P">permanent</option>'
+                             + '  </select>'
+                             + '</div>'
+                             + '<div class="flex--item">'
+                             + '  <input type="hidden" class="s-input" name="duration" id="mod-menu-lock-duration" value="1" disabled />'
+                             + '</div>'
+                             ;
+
+         const numeric = document.getElementById('cg-lock-duration-numeric');
+         const range   = document.getElementById('cg-lock-duration-range');
+         numeric.addEventListener('click' , onChangeLockDuration);
+         numeric.addEventListener('change', onChangeLockDuration);
+         range  .addEventListener('click' , onChangeLockDuration);
+         range  .addEventListener('change', onChangeLockDuration);
+         $('#se-mod-menu-action-lock-expandable input[name="noticetype"]').change(function()
+         {
+            switch (this.value)
+            {
+               case '20':  // content dispute
+               case '21':  // comments only
+               {
+                  range.value = 1;
+                  break;
+               }
+               case '22':  // historical significance
+               case '23':  // wiki answer
+               case '28':  // obsolete
+               {
+                  range.value = -1;
+                  break;
+               }
+            }
+            onChangeLockDuration();
+         });
       });
    }
+
+   function onChangeLockDuration()
+   {
+      const numeric      = document.getElementById('cg-lock-duration-numeric');
+      const range        = document.getElementById('cg-lock-duration-range');
+      const numericValue = Number(numeric.value);
+      const rangeValue   = Number(range  .value);
+      const isPermanent  = (rangeValue === -1);
+      const actualValue  = (isPermanent ? -1 : (numericValue * rangeValue));
+      numeric.disabled   = isPermanent;
+      document.getElementById('mod-menu-lock-duration').value = actualValue.toString();
+   }
+
 
    function appendStyles()
    {
