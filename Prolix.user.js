@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Prolix
 // @description  Improve site UX for particularly long-winded users and their allies.
-// @version      0.4.1
+// @version      0.5.0
 // @author       Cody Gray
 // @homepage     https://github.com/codygray/so-userscripts
 // @namespace    https://github.com/codygray/so-userscripts/
@@ -25,40 +25,38 @@
    'use strict';
 
 
-   const isMeta = (location.hostname == 'meta.stackoverflow.com' || (typeof StackExchange.options.site.parentUrl !== 'undefined'));
+   const IS_META = (location.hostname === 'meta.stackoverflow.com' || StackExchange?.options?.site?.parentUrl);
+
 
    function onElementInserted(containerSelector, elementSelector, callback)
    {
-      const onMutationsObserved = function(mutations)
-      {
-         mutations.forEach(function(mutation)
-         {
-            if (mutation.addedNodes.length)
-            {
-               const elements = $(mutation.addedNodes).find(elementSelector);
-               for (var i = 0, len = elements.length; i < len; ++i)
-               {
-                  callback(elements[i]);
-               }
-            }
-         });
-      };
       const MutationObserver = (window.MutationObserver || window.WebKitMutationObserver);
-      const observer = new MutationObserver(onMutationsObserved);
-      const config = { childList: true, subtree: true };
-      const container = $(containerSelector);
-      for (var i = 0, len = container.length; i < len; ++i)
+      const observer         = new MutationObserver((mutations) =>
       {
-         observer.observe(container[i], config);
-      }
+         mutations.forEach((mutation) =>
+         {
+            mutation.addedNodes.forEach((node) =>
+            {
+               $(node).find(elementSelector).each((i, element) =>
+               {
+                  callback(element);
+               });
+            });
+         });
+      });
+      const config    = { childList: true, subtree: true };
+      $(containerSelector).each((i, element) =>
+      {
+         observer.observe(element, config);
+      });
    }
 
 
    function resizeCommentTextarea(element)
    {
-      const $element = $(element);
-      const marginT = parseInt($element.css('margin-top'));
-      const marginB = parseInt($element.css('margin-bottom'));
+      const styles  = window.getComputedStyle(element) || element.currentStyle;
+      const marginT = parseInt(styles.marginTop);
+      const marginB = parseInt(styles.marginBottom);
       if (element.scrollHeight > element.clientHeight)
       {
          element.style.height = `${element.scrollHeight + marginT + marginB}px`;
@@ -70,11 +68,10 @@
       // Make all comment textareas auto-expand vertically to fit their text, both upon
       // initial appearance (e.g., clicking "edit") and when composing as lines of text
       // are added that overflow the currently visible area.
-      onElementInserted('.js-comments-container', 'textarea[name="comment"].js-comment-text-input', function(element)
+      onElementInserted('.js-comments-container', 'textarea[name="comment"].js-comment-text-input', (textarea) =>
       {
-         const textarea = $(element);
-         resizeCommentTextarea(element);
-         textarea.on('input', function()
+         resizeCommentTextarea(textarea);
+         textarea.addEventListener('input', () =>
          {
             resizeCommentTextarea(this);
          });
@@ -85,31 +82,38 @@
    {
       const styles = `
 <style>
-/* UNSTICKY TOP BAR: */
-html {
-    --top-bar-allocated-space: 0;
-}
-body {
-    padding-top: 0;
-}
-header.top-bar,
-body.channels-page header.top-bar {
-    position: initial !important;
-}
-
-
 /* REMOVE CLUTTER: */
 
 /* Remove the "Products" menu in the Stack Overflow top nav bar.
  * <https://meta.stackoverflow.com/q/386393> */
-.top-bar .-marketing-link {
-    display: none !important;
+.top-bar .-marketing-link
+{
+   display: none !important;
 }
 
 /* Hide ad banners */
-#mainbar .question .js-zone-container {
-    display: none;
+#mainbar .question .js-zone-container
+{
+   display: none;
 }
+
+
+/* UNSTICKY TOP BAR: */
+html
+{
+   --top-bar-allocated-space: 0;
+}
+
+body
+{
+   padding-top: 0;
+}
+header.top-bar,
+body.channels-page header.top-bar
+{
+   position: initial !important;
+}
+
 
 /* GENERAL: */
 
@@ -119,33 +123,74 @@ body .post-text a:not(.post-tag):not(.badge-tag):visited,
 body .comment-copy a:visited,
 body .wmd-preview a:not(.post-tag):not(.badge-tag):visited,
 body .question-hyperlink:visited,
-body .answer-hyperlink:visited {
-    color: ${isMeta ? '#848586' : '#5C08C3'};
+body .answer-hyperlink:visited
+{
+   color: ${IS_META ? '#848586' : '#5C08C3'};
 }
+
 
 /* VOTING CONTAINER: */
 
 /* Make voting arrows and other sidebar content "sticky", so that it scrolls with long posts. */
-.votecell .js-voting-container {
-  position: sticky;
-  top: 0;
-  z-index: 100;
+.votecell .js-voting-container
+{
+   position: sticky;
+   top: 0;
+   z-index: 100;
 }
+
+
+/* POST QUICK-LINKS: */
+
+/* Make the quick-links underneath posts appear in lowercase, as God intended. */
+.js-post-menu .s-anchors > .flex--item > *
+{
+   text-transform: lowercase;
+}
+/* But prevent the lowercase style from affecting other things. */
+.js-post-menu .s-anchors > .flex--item > * > *
+{
+   text-transform: initial;
+}
+
+/* Allow hiding individual links. */
+.js-post-menu .s-anchors > .flex--item
+{
+   margin: 0;
+}
+.js-post-menu .s-anchors > .flex--item button,
+.js-post-menu .s-anchors > .flex--item a
+{
+   margin: 4px;
+}
+.js-post-menu .s-anchors > .flex--item a
+{
+   display: block;
+}
+
+/* Hide the "follow" link. */
+.js-post-menu .s-anchors > .flex--item .js-follow-post
+{
+   //display: none;
+}
+
 
 /* COMMENTS: */
 
 /* Undo stupid Stacks style that hides the scrollbar arrows. */
-.s-input, .s-textarea {
+.s-input, .s-textarea
+{
    scrollbar-color: inherit !important;
 }
 
 /* Since this textarea is auto-expanding, no need for scrollbar arrows. */
-.comment-form textarea.js-comment-text-input {
+.comment-form textarea.js-comment-text-input
+{
    overflow: hidden;
 }
 </style>
 `;
-       $('body').append(styles);
+      document.documentElement.insertAdjacentHTML('beforeend', styles);
     }
 
 
