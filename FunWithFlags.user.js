@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Fun With Flags
 // @description  Miscellaneous improvements to the UX for the moderator flag dashboard.
-// @version      0.2.0
+// @version      0.3.0
 // @author       Cody Gray
 // @homepage     https://github.com/codygray/so-userscripts
 //
@@ -383,6 +383,11 @@
    {
       const styles = `
 <style>
+/* Fix long-standing bug where redaction flags overflow. */
+.js-redaction-flag-cell {
+   overflow-x: auto;
+}
+
 /* Compress the flagged post boxes to save screen space. */
 .js-flagged-post {
    margin: 24px 12px 0 24px !important;
