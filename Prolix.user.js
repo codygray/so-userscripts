@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Prolix
 // @description  Improve site UX for particularly long-winded users and their allies.
-// @version      0.6.0
+// @version      0.6.1
 // @author       Cody Gray
 // @homepage     https://github.com/codygray/so-userscripts
 // @namespace    https://github.com/codygray/so-userscripts/
@@ -86,7 +86,8 @@
 
 /* Remove the "Products" menu in the Stack Overflow top nav bar.
  * <https://meta.stackoverflow.com/q/386393> */
-.top-bar .-marketing-link
+.top-bar .-marketing-link,
+header.s-topbar
 {
    display: none !important;
 }
