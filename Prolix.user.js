@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Prolix
 // @description  Improve site UX for particularly long-winded users and their allies.
-// @version      0.6.3
+// @version      0.6.4
 // @author       Cody Gray
 // @homepage     https://github.com/codygray/so-userscripts
 // @namespace    https://github.com/codygray/so-userscripts/
@@ -125,7 +125,8 @@ body .post-text a:not(.post-tag):not(.badge-tag):visited,
 body .comment-copy a:visited,
 body .wmd-preview a:not(.post-tag):not(.badge-tag):visited,
 body .question-hyperlink:visited,
-body .answer-hyperlink:visited
+body .answer-hyperlink:visited,
+.s-post-summary--content .s-post-summary--content-title a:visited
 {
    color: ${IS_META ? '#848586' : '#5C08C3'};
 }
