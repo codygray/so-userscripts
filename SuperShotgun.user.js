@@ -1,15 +1,14 @@
 // ==UserScript==
 // @name         Super Shotgun
 // @description  Facilitates immediate, hassle-free removal of inappropriate questions by a moderator.
-// @version      1.0.4
+// @version      1.0.5
 // @author       Cody Gray
 // @homepage     https://github.com/codygray/so-userscripts
 //
 // @updateURL    https://github.com/codygray/so-userscripts/raw/master/SuperShotgun.user.js
 // @downloadURL  https://github.com/codygray/so-userscripts/raw/master/SuperShotgun.user.js
 //
-// @include      https://stackoverflow.com/*
-// @include      https://meta.stackoverflow.com/*
+// @match        *://*.stackoverflow.com/*
 //
 // @exclude      *chat.*
 // @exclude      *blog.*
@@ -147,7 +146,7 @@ ${!isMeta ?
 `<a class="nuke-button ws-nowrap s-btn s-btn__danger s-btn__outlined" data-reason="SiteSpecific" data-reasonid="4" title="General computer usage (e.g., Super User)" href="javascript:void(0);">User</a>
  <a class="nuke-button ws-nowrap s-btn s-btn__danger s-btn__outlined" data-reason="SiteSpecific" data-reasonid="7" title="Professional server administration (e.g., Server Fault)" href="javascript:void(0);">Server</a>
  <a class="nuke-button ws-nowrap s-btn s-btn__danger s-btn__outlined" data-reason="SiteSpecific" data-reasonid="3" data-reasontext="This question does not appear to be about programming within the scope defined in the [Help Center](https://stackoverflow.com/help/on-topic)." title="General off-topic" href="javascript:void(0);">Off-Topic</a>
- <a class="nuke-button ws-nowrap s-btn s-btn__danger s-btn__outlined" data-reason="SiteSpecific" data-reasonid="3" data-reasontext="Questions asking for [customer support with third-party services](https://meta.stackoverflow.com/questions/255745 "Why can't I ask customer service-related questions on Stack Overflow?"), including [developer-centric questions about App Stores](https://meta.stackoverflow.com/q/272165 "Are developer-centric questions about application stores on topic?") are off-topic for Stack Overflow. Instead, please direct your questions to the relevant company/organization's technical support team." title="Customer support/App Stores" href="javascript:void(0);">App Stores</a>
+ <a class="nuke-button ws-nowrap s-btn s-btn__danger s-btn__outlined" data-reason="SiteSpecific" data-reasonid="3" data-reasontext="Questions asking for [customer support with third-party services](https://meta.stackoverflow.com/questions/255745 \"Why can't I ask customer service-related questions on Stack Overflow?\"), including [developer-centric questions about App Stores](https://meta.stackoverflow.com/q/272165 "Are developer-centric questions about application stores on topic?") are off-topic for Stack Overflow. Instead, please direct your questions to the relevant company/organization's technical support team." title="Customer support/App Stores" href="javascript:void(0);">App Stores</a>
  <a class="nuke-button ws-nowrap s-btn s-btn__danger s-btn__outlined" data-reason="SiteSpecific" data-reasonid="16" title="Soliciting recommendations for off-site resources" href="javascript:void(0);">Recommend</a>
 `
 :
