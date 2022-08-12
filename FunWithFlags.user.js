@@ -1,24 +1,46 @@
 // ==UserScript==
 // @name         Fun With Flags
+// @namespace    https://github.com/codygray/so-userscripts
 // @description  Miscellaneous improvements to the UX for the moderator flag dashboard.
-// @version      0.3.0
 // @author       Cody Gray
-// @homepage     https://github.com/codygray/so-userscripts
-//
+// @version      0.3.1
+// @homepageURL  https://github.com/codygray/so-userscripts
 // @updateURL    https://github.com/codygray/so-userscripts/raw/master/FunWithFlags.user.js
 // @downloadURL  https://github.com/codygray/so-userscripts/raw/master/FunWithFlags.user.js
+// @supportURL   https://github.com/codygray/so-userscripts/issues
 //
-// @include      https://*stackoverflow.com/*
-// @include      https://*serverfault.com/*
-// @include      https://*superuser.com/*
-// @include      https://*askubuntu.com/*
-// @include      https://*mathoverflow.net/*
-// @include      https://*.stackexchange.com/*
+// @match       *://*.stackexchange.com/*
+// @match       *://*.stackoverflow.com/*
+// @match       *://*.superuser.com/*
+// @match       *://*.serverfault.com/*
+// @match       *://*.askubuntu.com/*
+// @match       *://*.stackapps.com/*
+// @match       *://*.mathoverflow.net/*
 //
-// @exclude      *chat.*
-// @exclude      *blog.*
-// @exclude      https://stackoverflow.com/c/*
+// @exclude     *://stackexchange.com/*
+// @exclude     *://api.*
+// @exclude     *://blog.*
+// @exclude     *://chat.*
+// @exclude     *://data.*
+// @exclude     *://*.area51.stackexchange.com*
+// @exclude     *://stackoverflow.com/advertising*
+// @exclude     *://stackoverflow.com/jobs*
+// @exclude     *://stackoverflow.com/talent*
+// @exclude     *://stackoverflow.com/teams*
+// @exclude     *://stackoverflow.com/c/*
+//
+// @connect      stackexchange.com
+// @connect      stackoverflow.com
+// @connect      superuser.com
+// @connect      serverfault.com
+// @connect      askubuntu.com
+// @connect      stackapps.com
+// @connect      mathoverflow.net
+//
+// @run-at       document-end
 // ==/UserScript==
+/* eslint-disable no-multi-spaces */
+/* global $:readonly    */  // SO/SE sites always provide jQuery, free-of-charge
 
 // Note: Some of the functionality here is inspired by and/or adapted from Samuel Liew's ModMessageHelper script
 //       (https://github.com/samliew/SO-mod-userscripts/blob/master/ModMessageHelper.user.js).
