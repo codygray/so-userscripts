@@ -3,7 +3,7 @@
 // @namespace    https://github.com/codygray/so-userscripts
 // @description  Miscellaneous improvements to the UX for the moderator flag dashboard.
 // @author       Cody Gray
-// @version      0.3.1
+// @version      0.3.2
 // @homepageURL  https://github.com/codygray/so-userscripts
 // @updateURL    https://github.com/codygray/so-userscripts/raw/master/FunWithFlags.user.js
 // @downloadURL  https://github.com/codygray/so-userscripts/raw/master/FunWithFlags.user.js
@@ -28,14 +28,6 @@
 // @exclude     *://stackoverflow.com/talent*
 // @exclude     *://stackoverflow.com/teams*
 // @exclude     *://stackoverflow.com/c/*
-//
-// @connect      stackexchange.com
-// @connect      stackoverflow.com
-// @connect      superuser.com
-// @connect      serverfault.com
-// @connect      askubuntu.com
-// @connect      stackapps.com
-// @connect      mathoverflow.net
 //
 // @run-at       document-end
 // ==/UserScript==
@@ -408,6 +400,17 @@
 /* Fix long-standing bug where redaction flags overflow. */
 .js-redaction-flag-cell {
    overflow-x: auto;
+}
+
+/* Fix long-standing bug where code blocks cause CM escalation messages and mod messages
+ * to overflow. This confines them to the width of the #mainbar container, resulting in
+ * a horizontal scrollbar. */
+.mod-page #content #mainbar > table,
+.mod-page #content #mainbar > table > tbody,
+.mod-page #content #mainbar > table > tbody > tr,
+.mod-page #content #mainbar > table > tbody > tr > td:first-child:last-child {
+   display: block;
+   width: 100%;
 }
 
 /* Compress the flagged post boxes to save screen space. */
