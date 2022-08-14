@@ -3,7 +3,7 @@
 // @namespace    https://github.com/codygray/so-userscripts
 // @description  Miscellaneous improvements to the UX for the moderator flag dashboard.
 // @author       Cody Gray
-// @version      0.3.4
+// @version      0.3.5
 // @homepageURL  https://github.com/codygray/so-userscripts
 // @updateURL    https://github.com/codygray/so-userscripts/raw/master/FunWithFlags.user.js
 // @downloadURL  https://github.com/codygray/so-userscripts/raw/master/FunWithFlags.user.js
@@ -413,12 +413,6 @@ body:is(.mod-page, .user-page) #content #mainbar > table.clear:not([id]) > tbody
 body:is(.mod-page, .user-page) #content #mainbar > table.clear:not([id]) > tbody > tr > td:first-child:last-child {
    display: block;
    width: 100%;
-}
-
-/* Fix breakage on "Duplicate Comments" page. */
-.mod-page #content #mainbar > table, .mod-page #content #mainbar > table > tbody, .mod-page #content #mainbar > table > tbody > tr, .mod-page #content #mainbar > table > tbody > tr > td:first-child:last-child
-{
-   display: revert;
 }
 
 /* Compress the flagged post boxes to save screen space. */
