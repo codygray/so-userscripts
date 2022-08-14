@@ -3,7 +3,7 @@
 // @namespace    https://github.com/codygray/so-userscripts
 // @description  Miscellaneous improvements to the UX for the moderator flag dashboard.
 // @author       Cody Gray
-// @version      0.3.3
+// @version      0.3.4
 // @homepageURL  https://github.com/codygray/so-userscripts
 // @updateURL    https://github.com/codygray/so-userscripts/raw/master/FunWithFlags.user.js
 // @downloadURL  https://github.com/codygray/so-userscripts/raw/master/FunWithFlags.user.js
@@ -404,11 +404,13 @@
 
 /* Fix long-standing bug where code blocks cause CM escalation messages and mod messages
  * to overflow. This confines them to the width of the #mainbar container, resulting in
- * a horizontal scrollbar. */
-.mod-page #content #mainbar > table,
-.mod-page #content #mainbar > table > tbody,
-.mod-page #content #mainbar > table > tbody > tr,
-.mod-page #content #mainbar > table > tbody > tr > td:first-child:last-child {
+ * a horizontal scrollbar.
+ * Borrowed from Makyen's version, with (hopefully) minimized side-effects:
+ * <https://chat.stackoverflow.com/transcript/message/55059784#55059784> */
+body:is(.mod-page, .user-page) #content #mainbar > table.clear:not([id]),
+body:is(.mod-page, .user-page) #content #mainbar > table.clear:not([id]) > tbody,
+body:is(.mod-page, .user-page) #content #mainbar > table.clear:not([id]) > tbody > tr,
+body:is(.mod-page, .user-page) #content #mainbar > table.clear:not([id]) > tbody > tr > td:first-child:last-child {
    display: block;
    width: 100%;
 }
