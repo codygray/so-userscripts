@@ -3,7 +3,7 @@
 // @namespace    https://github.com/codygray/so-userscripts
 // @description  Miscellaneous improvements to the UX for the moderator flag dashboard.
 // @author       Cody Gray
-// @version      0.3.5
+// @version      0.3.6
 // @homepageURL  https://github.com/codygray/so-userscripts
 // @updateURL    https://github.com/codygray/so-userscripts/raw/master/FunWithFlags.user.js
 // @downloadURL  https://github.com/codygray/so-userscripts/raw/master/FunWithFlags.user.js
@@ -406,7 +406,8 @@
  * to overflow. This confines them to the width of the #mainbar container, resulting in
  * a horizontal scrollbar.
  * Borrowed from Makyen's version, with (hopefully) minimized side-effects:
- * <https://chat.stackoverflow.com/transcript/message/55059784#55059784> */
+ * <https://chat.stackoverflow.com/transcript/message/55059784#55059784>
+ */
 body:is(.mod-page, .user-page) #content #mainbar > table.clear:not([id]),
 body:is(.mod-page, .user-page) #content #mainbar > table.clear:not([id]) > tbody,
 body:is(.mod-page, .user-page) #content #mainbar > table.clear:not([id]) > tbody > tr,
@@ -510,6 +511,17 @@ body:is(.mod-page, .user-page) #content #mainbar > table.clear:not([id]) > tbody
     left: 17px;
 }
 */
+
+
+/* On Meta, I use the "ignored tags" tool to de-emphasize completed feature requests,
+ * but I don't want the fact that these are red status tags to become completely
+ * invisible, so this overrides the (current) SE default style that sets the
+ * grayscale filter to 100%.
+ */
+.s-post-summary__ignored .s-post-summary--meta-tags > a,
+.s-post-summary__deleted .s-post-summary--meta-tags > a {
+   filter: grayscale(65%);
+}
 
 
 /* Styles for classes that we applied. */
