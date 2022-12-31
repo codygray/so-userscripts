@@ -3,7 +3,7 @@
 // @namespace    https://github.com/codygray/so-userscripts
 // @description  Miscellaneous improvements to the UX for the moderator flag dashboard.
 // @author       Cody Gray
-// @version      0.3.6
+// @version      0.4.0
 // @homepageURL  https://github.com/codygray/so-userscripts
 // @updateURL    https://github.com/codygray/so-userscripts/raw/master/FunWithFlags.user.js
 // @downloadURL  https://github.com/codygray/so-userscripts/raw/master/FunWithFlags.user.js
@@ -32,7 +32,8 @@
 // @run-at      document-end
 // ==/UserScript==
 /* eslint-disable no-multi-spaces */
-/* global $:readonly    */  // SO/SE sites always provide jQuery, free-of-charge
+/* global $:readonly              */  // SO/SE sites always provide jQuery, free-of-charge
+/* global StackExchange:readonly  */  // this global object always exists on SO/SE domains
 
 // Note: Some of the functionality here is inspired by and/or adapted from Samuel Liew's ModMessageHelper script
 //       (https://github.com/samliew/SO-mod-userscripts/blob/master/ModMessageHelper.user.js).
@@ -75,106 +76,20 @@
    }
 
 
-   function updateSuspensionControls()
+   function onContactCmPageLoad()
    {
-      const suspend = !!($('#suspendUser').get(0).checked);
-
-      // Update the submit button for the "contact user" form, changing the text label
-      // and the style/color to reflect the action that will be taken.
-      const button = $('#submit-button');
-      if (suspend)
+      // On the "contact CM -> create" page, bypass the silly extra step requiring clicking
+      // the link just to show a pop-up dialog that contains a menu of options, since this
+      // is ALWAYS done every time on this page.
+      const link  = $('#show-templates');
+      const popup = link.next();
+      if (link.length === 1)
       {
-         const days = $('#suspendDays').val();
-         button.text(`Notify and Suspend User for ${days} Day${(days != 1) ? 's' : ''}`);
-         button.removeClass('s-btn__primary');
-         button.addClass('s-btn__danger s-btn__filled');
-      }
-      else
-      {
-         button.text('Notify User');
-         button.removeClass('s-btn__danger s-btn__filled');
-         button.addClass('s-btn__primary');
-      }
-
-      // Update the display of the suspension reason.
-      $('#cg-suspend-reason').toggle(suspend);
-   }
-
-   function onPageLoad()
-   {
-      // Customize the "contact user" page in all of its forms (creation and reply).
-      if (window.location.pathname.startsWith('/users/message/'))
-      {
-         // Prevent the page from automatically being scrolled to the bottom,
-         // with the compose message editor focused.
-         window.scrollTo(0, 0);
-         $('#wmd-input').blur();
-
-         // Remove chat from the sidebar.
-         $('.js-chat-ad-rooms').closest('.s-sidebarwidget').remove();
-
-         // Make the hidden email input parameter visible as a checkbox.
-         const emailInput = $('#send-email');
-         emailInput.attr('type', 'checkbox');
-         emailInput.wrap('<label for="send-email" id="cg-send-email">send email:</label>');
-         // Prepare alternate warning message for when email is disabled:
-         $('#to_warning').after(`<div id="to_warning_noemail" class="system-alert">The user will only see this message on ${StackExchange.options.site.name}.</div>`);
-         emailInput.on('change', function()
-         {
-            $('#to_warning').toggleClass('hidden', !this.checked);
-         });
-      }
-
-      // Customize the "contact user -> create" page.
-      if (window.location.pathname.startsWith('/users/message/create/'))
-      {
-         // Make the hidden "templateName" input parameter visible as a textbox.
-         const templateNameInput = $('#templateName');
-         templateNameInput.attr('type', 'text');
-         templateNameInput.addClass('s-input');
-         templateNameInput.wrap('<label for="templateName" id="cg-template-name">template name:</label>');
-
-         // Make the hidden "templateEdited" input parameter visible as a checkbox.
-         const editedInput = $('#templateEdited');
-         editedInput.attr('type', 'checkbox');
-         editedInput.wrap('<label for="templateEdited" id="cg-template-edited">edited?</label>');
-
-         // Make the hidden "suspendReason" input parameter visible as a textbox,
-         // and move it to a more logical position.
-         const suspendReasonInput = $('#suspendReason');
-         suspendReasonInput.attr('type', 'text');
-         suspendReasonInput.addClass('s-input');
-         suspendReasonInput.wrap('<label for="suspendReason" id="cg-suspend-reason" title="Brief suspension reason that will be displayed publicly on the user&rsquo;s profile.">public suspension reason:</label>');
-         $('#copyPanel div.suspend-info').after($('#cg-suspend-reason'));
-
-         // Add a handler to the suspend checkbox that will fire upon state changes
-         // to update the affected controls.
-         const suspendCheckbox = $('#suspendUser');
-         suspendCheckbox.on('change', function()
-         {
-            updateSuspensionControls();
-         });
-
-         // Improve the custom number-of-days supension field by making it a numeric control
-         // and enforcing a maximum of 365 days (the form fails rudely for values > 365).
-         const suspensionDays = $('#suspendDays');
-         suspensionDays.attr({'type': 'number', 'max': '365'});
-         suspensionDays.addClass('s-input');
-      }
-
-      // On the "contact user -> create" and/or "contact CM -> create" pages, bypass the
-      // silly extra step requiring clicking the link just to show a pop-up dialog that
-      // contains a menu of options, since this is ALWAYS done every time on these pages.
-      if (window.location.pathname.startsWith('/users/message/create/') ||
-          window.location.pathname.startsWith('/admin/cm-message/create/'))
-      {
-         const link = $('#show-templates');
          link.click();
 
          $(document).ajaxComplete(function(event, xhr, settings)
          {
-            if (settings.url.startsWith('/admin/contact-user/template-popup/') ||
-                settings.url.startsWith('/admin/contact-cm/template-popup/'))
+            if (settings.url.startsWith('/admin/contact-cm/template-popup/'))
             {
                // Only run this event once: once executed, unbind it.
                $(event.currentTarget).unbind('ajaxComplete');
@@ -193,75 +108,256 @@
                   popup.find('.popup-close').hide();
                   popup.find('.popup-actions-cancel').hide();
                   link.replaceWith(popup);
-
-                  if (settings.url.startsWith('/admin/contact-user/template-popup/'))
-                  {
-                     // Attach an event handler to the submit button's click event.
-                     $('#pane-main + .popup-actions .popup-submit').on('click', function()
-                     {
-                        // Update the next submit button (the one that applies a suspension).
-                        // This takes care of the fact that certain of the canned reasons
-                        // default to applying a suspension, so the states of the controls
-                        // that we added must be updated accordingly.
-                        updateSuspensionControls();
-                     });
-
-                     // Also update the text of the submit button whenever the suspension duration changes.
-                     $('#suspendDays, .suspend-info input[name="suspend-choice"]').on('change', function()
-                     {
-                        updateSuspensionControls();
-                     });
-                  }
                }
             }
          });
       }
+   }
 
-      if (window.location.pathname.startsWith('/review/'))
+   function onUserMessagePageLoad()
+   {
+      // Prevent the page from automatically being scrolled to the bottom,
+      // with the compose message editor focused.
+      window.scrollTo(0, 0);
+      $('#wmd-input').blur();
+
+      // Remove chat from the sidebar.
+      $('.js-chat-ad-link').closest('.s-sidebarwidget').remove();
+
+      // Make the hidden email input parameter visible as a checkbox.
+      // Also set up an alternate message for when email is disabled.
+      const emailInput = $('#js-send-email');
+      emailInput.attr('type', 'checkbox');
+      emailInput.after('<label for="js-send-email" id="cg-send-email">send email</label>');
+      $('#js-to-warning').after(`<div id="js-to-warning_noemail" class="s-notice s-notice__info mt8 hidden">The user will only see this message on ${StackExchange.options.site.name}.</div>`);
+      emailInput.on('change', function()
       {
-         onElementInserted('body.review-task-page .js-review-task .js-review-content', 'ul', function(element)
+         const sendEmail = this.checked;
+         $('#js-to-warning')        .toggleClass('hidden', !sendEmail);
+         $('#js-to-warning_noemail').toggleClass('hidden',  sendEmail);
+      });
+   }
+
+   function onContactUserPageLoad()
+   {
+      // When the page has been fully loaded, we're going to automatically display the list of
+      // templates inline (we can't do it here, because the "click()" doesn't work). To reduce
+      // confusion, go ahead and hide the button here, though.
+      $('button.js-load-modal').hide();
+
+      // Make the hidden "template-name" input parameter visible as a textbox.
+      const nameInput = $('#js-template-name');
+      nameInput.attr('type', 'text');
+      nameInput.addClass('s-input');
+      nameInput.wrap('<label for="template-name" id="cg-template-name">template name:</label>');
+
+      // Make the hidden "template-edited" input parameter visible as a checkbox.
+      const editedInput = $('#js-template-edited');
+      editedInput.attr('type', 'checkbox');
+      editedInput.wrap('<label for="js-template-edited" id="cg-template-edited">edited?</label>');
+
+      // Make the hidden "suspend-reason" input parameter visible as a textbox,
+      // and move it to a more logical position.
+      const reasonInput = $('#js-suspend-reason');
+      reasonInput.attr('type', 'text');
+      reasonInput.addClass('s-input');
+      reasonInput.wrap('<label for="js-suspend-reason" id="cg-suspend-reason" title="Brief suspension reason that will be displayed publicly on the user&rsquo;s profile.">public suspension reason:</label>');
+      $('#cg-template-name').before($('#cg-suspend-reason'));
+
+      // Improve the custom number-of-days supension field by making it a numeric (spin) control
+      // and enforcing a maximum of 365 days (the form fails rudely for values > 365).
+      const daysInput = $('#js-suspend-days');
+      daysInput.attr({'type': 'number', 'max': '365'});
+
+      // Update the text of the submit button whenever the suspension
+      // status and/or duration changes.
+      $('#js-suspend-user, .js-suspend-info input[name="suspend-choice"]').on('change', function()
+      {
+         updateSuspensionControls();
+      });
+
+      // Fix a bug where changing the contents of the "other" field (custom number of days)
+      // does not automatically select the corresponding radio button. (Note that this is
+      // merely a visual bug, not a behavioral one, since the form always takes the actual,
+      // current value of the number-of-days field, and that's already been updated.)
+      daysInput.on('change', function()
+      {
+         $('#js-days-other').trigger('click');
+         updateSuspensionControls();
+      });
+
+      // If the user edits the message, ensure that the "template-edited" input parameter
+      // is checked (set to true).
+      $('#wmd-input').on('keyup', function()
+      {
+         const editedInput = $('#js-template-edited');
+         if (!editedInput.is(':checked'))
          {
-            $('a:contains("review suspended")').each(function()
-            {
-               $(this).addClass('bg-red-100');
-            });
-         });
-      }
+            editedInput.trigger('click');
+         }
+      });
+   }
 
-      if (window.location.pathname.startsWith('/users/'))
+   function onContactUserPageLoaded()
+   {
+      // On the "contact user -> create" page, bypass the silly extra step requiring clicking
+      // the link just to show a pop-up dialog that contains a menu of options, since this
+      // is ALWAYS done every time on this page.
+      const btn   = $('button.js-load-modal');
+      const aside = btn.next();
+      if ((btn.length === 1) && (aside.length === 1))
       {
-         // Semantically color text in profile page.
+         btn.click();
+
          $(document).ajaxComplete(function(event, xhr, settings)
          {
-            $('#user-tab-activity .history-table td a').each(function()
+            if (settings.url.startsWith('/admin/contact-user/template-popup/'))
             {
-               const $this = $(this);
-               const text  = $this.text();
-               if ((text === "Approve")       ||
-                   (text === "approved edit") ||
-                   (text === "Looks OK")      ||
-                   (text === "No Action Needed"))
+               // Only run this event once: once executed, unbind it.
+               $(event.currentTarget).unbind('ajaxComplete');
+
+               // Restyle and manipulate to inline.
+               aside.removeClass('s-modal');
+               aside.find('div.s-modal--dialog').addClass('d-grid');
+               aside.find('button.s-btn[data-action="s-modal#hide"]').hide();
+               btn.hide();
+
+               // Also, to save space (and since they're not very useful anyway),
+               // hide the detailed "descriptions" (which are really just the
+               // first portion of the template) for each of the options.
+               $('.js-action-desc').hide();
+
+               // Attach an event handler to the submit button's click event.
+               aside.find('.js-popup-submit').on('click', function()
                {
-                  $this.addClass('fc-green-500');
-               }
-               else if ((text === "Reject")        ||
-                        (text === "rejected edit") ||
-                        (text === "Unsalvageable"))
-               {
-                  $this.addClass('fc-red-600');
-               }
-               else if ((text === "Edit") ||
-                        (text === 'Requires Editing'))
-               {
-                  $this.addClass('fc-yellow-700');
-               }
-               else if ((text === "Leave Closed") ||
-                        (text === "Leave Open"))
-               {
-                  $this.addClass('fc-black-400');
-               }
-            });
+                  // Reverse our manipulations.
+                  if (!btn.is(':visible'))
+                  {
+                     aside.find('button.s-btn[data-action="s-modal#hide"]').show();
+                     aside.find('div.s-modal--dialog').removeClass('d-grid');
+                     aside.addClass('s-modal');
+                     btn.show();
+                  }
+
+                  // Update the next submit button (the one that applies a suspension).
+                  // This takes care of the fact that certain of the canned reasons
+                  // default to applying a suspension, so the states of the controls
+                  // that we added must be updated accordingly.
+                  updateSuspensionControls();
+               });
+            }
          });
+      }
+   }
+
+   function updateSuspensionControls()
+   {
+      const suspend = !!($('#js-suspend-user').get(0).checked);
+
+      // Update the submit button for the "contact user" form, changing the text label
+      // and the style/color to reflect the action that will be taken.
+      const button = $('.js-form-submit-controls .js-submit-button');
+      if (suspend)
+      {
+         const days = $('#js-suspend-days').val();
+         button.text(`Notify and Suspend User for ${days} Day${(days != 1) ? 's' : ''}`);
+         button.removeClass('s-btn__primary');
+         button.addClass('s-btn__danger s-btn__filled');
+      }
+      else
+      {
+         button.text('Notify User');
+         button.removeClass('s-btn__danger s-btn__filled');
+         button.addClass('s-btn__primary');
+      }
+
+      // Update the display of the suspension reason.
+      $('#cg-suspend-reason').toggle(suspend);
+   }
+
+   function onReviewPageLoad()
+   {
+      onElementInserted('body.review-task-page .js-review-task .js-review-content', 'ul', function(element)
+      {
+         $('a:contains("review suspended")').each(function()
+         {
+            $(this).addClass('bg-red-100');
+         });
+      });
+   }
+
+   function onUserProfilePageLoad()
+   {
+      // Semantically color action text in the profile page.
+      $(document).ajaxComplete(function(event, xhr, settings)
+      {
+         $('#user-tab-activity .js-expandable-posts a.s-link').each(function()
+         {
+            const link = $(this);
+            const text = link.text().trim();
+            if ((text === "Approve")       ||
+                (text === "approved edit") ||
+                (text === "Looks OK")      ||
+                (text === "No Action Needed"))
+            {
+               link.addClass('bg-green-050');
+            }
+            else if ((text === "Leave Closed") ||
+                     (text === "Leave Open"))
+            {
+               link.addClass('bg-powder-100');
+            }
+            else if ((text === "Edit")             ||
+                     (text === "Requires Editing") ||
+                     (text === "Needs community edit"))
+            {
+               link.addClass('bg-yellow-100');
+            }
+            else if (text === "Reopen")
+            {
+               link.addClass('bg-bronze-lighter');
+            }
+            else if ((text === "Close") ||
+                     (text === "Needs author edit"))
+            {
+               link.addClass('bg-orange-100');
+            }
+            else if ((text === "Reject")          ||
+                     (text === "Reject and Edit") ||
+                     (text === "rejected edit")   ||
+                     (text === "Unsalvageable")   ||
+                     (text === "Delete")          ||
+                     (text === "Flag"))
+            {
+               link.addClass('bg-red-100');
+            }
+         });
+      });
+   }
+
+   function onPageLoad()
+   {
+      // Apply page-specific customizations.
+      const path = window.location.pathname;
+      if (path.startsWith('/admin/cm-message/create/'))
+      {
+         onContactCmPageLoad();
+      }
+      if (path.startsWith('/users/message/'))
+      {
+         onUserMessagePageLoad();
+      }
+      if (path.startsWith('/users/message/create/'))
+      {
+         onContactUserPageLoad();
+      }
+      if (path.startsWith('/review/'))
+      {
+         onReviewPageLoad();
+      }
+      if (path.startsWith('/users/'))
+      {
+         onUserProfilePageLoad();
       }
 
       // Apply the "danger" class styling to all "decline" buttons
@@ -390,6 +486,17 @@
       const actualValue  = (isPermanent ? -1 : (numericValue * rangeValue));
       numeric.disabled   = isPermanent;
       document.getElementById('mod-menu-lock-duration').value = actualValue.toString();
+   }
+
+
+   function onPageLoaded()
+   {
+      // Apply page-specific customizations.
+      const path = window.location.pathname;
+      if (path.startsWith('/users/message/create/'))
+      {
+         onContactUserPageLoaded();
+      }
    }
 
 
@@ -531,10 +638,7 @@ body:is(.mod-page, .user-page) #content #mainbar > table.clear:not([id]) > tbody
 }
 
 
-/* Contact user/CM messages: */
-#mainbar > hr:first-child {
-   display: none;  /* hide pointless and inconsistent line at top of "contact CM" page */
-}
+/* Contact CM/User: */
 #mainbar > div:first-child > span.revision-comment:first-child {
    display: block;
    padding: 9px;
@@ -544,59 +648,41 @@ body:is(.mod-page, .user-page) #content #mainbar > table.clear:not([id]) > tbody
    color: var(--green-700);
    font-size: 110%;
 }
-#msg-form #to_warning,
-#msg-form #to_warning_noemail {
-   margin-bottom: 0;
+#mainbar h2.js-hide-until-confirm {
+   margin-top: var(--su16) !important;  /* breathing room */
 }
-#msg-form #to_warning_noemail {
-    display: none;
-   line-height: 100%;
+
+/* Contact CM: */
+#mainbar > hr:first-child {
+   display: none;  /* hide pointless and inconsistent line at top of page */
 }
-#msg-form #to_warning,
-#msg-form #to_warning.hidden + #to_warning_noemail {
-   display: inline-block;
+
+/* Contact User: */
+#js-msg-form .js-suspend-info {
+   margin-top: 3px !important;
+   margin-left: 18px;
 }
-#msg-form #cg-send-email {
-   display: block;
-}
-#msg-form #send-email {
-   margin-left: 6px;
-}
-#msg-form #suspendDays {
+#js-msg-form #js-suspend-days {
    margin: 0 0 0 3px;
    padding: 4px;
-   font-size: inherit;
-   width: 75px;
 }
-#msg-form #copyPanel div.suspend-info b {
-   color: var(--red);
+#js-msg-form #cg-suspend-reason,
+#js-msg-form #cg-template-name,
+#js-msg-form #cg-template-edited {
+   display: block;
+   font-weight: bold;
 }
-#msg-form #cg-suspend-reason,
-#msg-form #cg-template-name {
-   display: flex;
-   line-height: 44px;  /* vertically align with textbox */
+#js-msg-form #cg-template-name {
+   margin-top: var(--su16) !important;
 }
-#msg-form #cg-template-name {
-   margin-top: 30px;
-}
-#msg-form #suspendReason,
-#msg-form #templateName {
-   flex: 1;
-   width: 100%;
-   margin: 6px 0 6px 6px;
-   font-size: inherit;
-}
-#msg-form #copyPanel label[for="suspendUser"] {
-   margin-right: 6px;  /* give some breathing room */
-}
-#msg-form #cg-template-edited {
+#js-msg-form #cg-template-edited {
    float: right;
 }
-#msg-form #templateEdited {
-   margin: 0 0 5px 6px;
+#js-msg-form #js-template-edited {
+   margin-left: 5px;
 }
-#msg-form #copyPanel #wmd-input {
-    min-height: 600px;
+#js-msg-form #wmd-input {
+    height: 600px; /* bigger! bigger! (I write a lot.) */
 }
 
 
@@ -613,4 +699,5 @@ body:is(.mod-page, .user-page) #content #mainbar > table.clear:not([id]) > tbody
 
    appendStyles();
    onPageLoad();
+   window.addEventListener('load', onPageLoaded);
 })();
