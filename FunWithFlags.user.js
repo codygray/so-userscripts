@@ -3,7 +3,7 @@
 // @namespace    https://github.com/codygray/so-userscripts
 // @description  Miscellaneous improvements to the UX for the moderator flag dashboard.
 // @author       Cody Gray
-// @version      0.4.1
+// @version      0.4.2
 // @homepageURL  https://github.com/codygray/so-userscripts
 // @updateURL    https://github.com/codygray/so-userscripts/raw/master/FunWithFlags.user.js
 // @downloadURL  https://github.com/codygray/so-userscripts/raw/master/FunWithFlags.user.js
@@ -121,6 +121,20 @@ It is important to understand that all system- and moderator-imposed limits/bloc
 The most common limitations for people to attempt to evade using multiple accounts are the system-imposed question and answer bans. When you're seeing the message "We are no longer accepting questions/answers from this account", then you are not allowed to post additional questions or answers (whichever applies) from *any* account, even if you're not seeing that message on the other account. For more details about post bans, including what steps you can take to get out of them, please see: [What can I do when getting "We are no longer accepting questions/answers from this account"?](https://meta.stackoverflow.com/questions/255583/)
 
 We do understand that, in certain cases, there are legitimate reasons for operating a secondary account. This is permitted, as long as the additional account is not used to circumvent system- or moderator-imposed limitations and the accounts do not interact with each other. Basically, the rule is that you are not allowed to use multiple accounts to do things that you would not be permitted to do with a single account. If you are interested in learning more about our policies surrounding multiple accounts, please see: [What are the rules governing multiple accounts (i.e. sockpuppets)?](https://meta.stackoverflow.com/q/388984)`
+      },
+      {
+         description:  'ban-evasion via edits',
+         reason:       'for low-quality contributions',
+         defaultDays:  0,
+         insertBefore: 4,  // question repetition
+         message:      `\
+It has come to our attention that you recently edited [one of your questions]({todo}) to the point where it no longer bore any resemblance to the original version. Specifically, in [revision {todo}]({todo}), you changed {todo}.
+
+[Edits are *only* for improving, clarifying, and adding additional information to a question](${parentUrl}/help/editing). **You are not allowed to change an old question into something completely different.** It is not acceptable to use edits as a ["backdoor"](https://en.wikipedia.org/wiki/Backdoor_(computing)) method of asking a new question because the system will not let you do so. This is especially true for questions that have received answers and/or been closed as duplicates of another question.
+
+Therefore, this edit has been rolled back. You may make, at your discretion, further edits that improve the question, but do not make any more edits that completely change the question.
+
+If the system has blocked you from asking questions, please read: [What can I do when getting "We are no longer accepting questions/answers from this account"?](https://meta.stackoverflow.com/q/255583) You must *improve your existing questions* in order to re-gain the privilege of asking questions on {siteName}. You cannot get around these restrictions by changing old questions or creating a new account. Attempting to do so will only escalate the penalties applied to your account.`
       },
       {
          description:  'inappropriate user name',
