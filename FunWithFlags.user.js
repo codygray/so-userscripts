@@ -3,7 +3,7 @@
 // @namespace    https://github.com/codygray/so-userscripts
 // @description  Miscellaneous improvements to the UX for the moderator flag dashboard.
 // @author       Cody Gray
-// @version      0.4.0
+// @version      0.4.1
 // @homepageURL  https://github.com/codygray/so-userscripts
 // @updateURL    https://github.com/codygray/so-userscripts/raw/master/FunWithFlags.user.js
 // @downloadURL  https://github.com/codygray/so-userscripts/raw/master/FunWithFlags.user.js
@@ -48,8 +48,295 @@
    // Moderator check
    if (!StackExchange?.options?.user?.isModerator) { return; }
 
+   const parentUrl = StackExchange?.options?.site?.parentUrl || `https://${location.hostname}`;
 
-   function onElementInserted(containerSelector, elementSelector, callback)
+   appendStyles();
+   onPageLoad();
+   window.addEventListener('load', onPageLoaded);
+
+
+   // -----------------------------------------------
+   // Data
+   // -----------------------------------------------
+
+   // NOTE: Messages can include "{optionalSuspensionAutoMessage}" wherever you want it.
+   //       If it is not included anywhere in the message, it will be automatically
+   //       appended to the end of the message. In addition (or alternatively),
+   //       messages can include "{suspensionDurationDays}".
+   // NOTE: Officially-sanctioned options for "reason" include:
+   //         - "because of low-quality contributions"
+   //         - "for voting irregularities"
+   //         - "to cool down"
+   //         - "for rule violations"
+   //         - "for promotional content"
+   //         - "for plagiarism"
+   const customModMessages =
+   [
+      {
+         description:  'voluntary suspension upon request',
+         reason:       'upon request',
+         defaultDays:  30,
+         insertBefore: 0,  // consistently low quality questions over time
+         message:      `\
+As requested&hellip; {optionalSuspensionAutoMessage}
+
+Since this suspension is fully voluntary, you are welcome to reply to this message at any time in order to request that the suspension be lifted early. Otherwise, the suspension will automatically expire in {suspensionDurationDays} days, upon which time your full reputation and privileges will be restored.
+
+We wish you a pleasant and productive vacation from the site, and we look forward to your return!`
+      },
+      {
+         description:  'operating a shared account',
+         reason:       'for rule violations',
+         defaultDays:  0,
+         insertBefore: 0,  // consistently low quality questions over time
+         message:      `\
+As stated in the [Terms of Service](${parentUrl}/legal/terms-of-service/public), accounts owned by a company or otherwise shared by multiple users are not permitted:
+
+> To access some of the public Network features you will need to **register for an account as an individual** and consent to these Public Network Terms. If you do not consent to these Public Network Terms, Stack Overflow reserves the right to refuse, suspend or terminate your access to the public Network.
+
+Because this account appears to be in breach of this policy, it will be deleted.
+
+{optionalSuspensionAutoMessage}
+
+You are welcome to register for a new account as an *individual* user, subject to the Terms of Service.
+
+Should you wish to appeal this decision, you can contact the company using [this form](${parentUrl}/contact?referrer=${parentUrl}) or by emailing community@stackexchange.com.`
+      },
+      {
+         description:  'operating sockpuppet/evasion accounts',
+         reason:       'for rule violations',
+         defaultDays:  7,
+         insertBefore: 0,  // consistently low quality questions over time
+         message:      `\
+It has come to our attention that you have been creating and operating multiple ["sockpuppet"](https://en.wikipedia.org/wiki/Sock_puppet_account) accounts as a means for evading system-imposed limitations. This is a violation of our Terms of Service, and it is not fair to other users of {siteName}.
+
+{optionalSuspensionAutoMessage}
+
+All fraudulent accounts will be removed, their votes invalidated, and all unanswered questions deleted. Please refrain from using multiple accounts to circumvent our systems in the future. We take the integrity of the {siteName} systems very seriously, and future incidents of this type will result in increasingly longer suspensions being applied to your main account.
+
+(If you'd like to avoid possible future issues altogether, please use the [contact form](${parentUrl}/contact) and select the "I need to merge user profiles" option, so that we can merge them without penalty.)
+
+It is important to understand that all system- and moderator-imposed limits/blocks/bans/suspensions/etc. apply to the *user*, not just a single account. You are not permitted to create one or more new accounts in order to get around such limitations. If you are hitting a limit on any account, then you should act as if you were hitting that limit on *all* of your accounts.
+
+The most common limitations for people to attempt to evade using multiple accounts are the system-imposed question and answer bans. When you're seeing the message "We are no longer accepting questions/answers from this account", then you are not allowed to post additional questions or answers (whichever applies) from *any* account, even if you're not seeing that message on the other account. For more details about post bans, including what steps you can take to get out of them, please see: [What can I do when getting "We are no longer accepting questions/answers from this account"?](https://meta.stackoverflow.com/questions/255583/)
+
+We do understand that, in certain cases, there are legitimate reasons for operating a secondary account. This is permitted, as long as the additional account is not used to circumvent system- or moderator-imposed limitations and the accounts do not interact with each other. Basically, the rule is that you are not allowed to use multiple accounts to do things that you would not be permitted to do with a single account. If you are interested in learning more about our policies surrounding multiple accounts, please see: [What are the rules governing multiple accounts (i.e. sockpuppets)?](https://meta.stackoverflow.com/q/388984)`
+      },
+      {
+         description:  'inappropriate user name',
+         reason:       'to cool down',
+         defaultDays:  0,
+         insertBefore: 5,  // revenge downvoting
+         message:      `\
+A moderator has reviewed your account and determined that the user name you chose was inappropriate. While you should feel free to express your personal identity, this is a family-friendly site and we require all user names to comply with our [Code of Conduct](${parentUrl}/conduct). Because all of your contributions to this site display your user name publicly, we cannot make any exceptions to this policy, regardless of what your intentions may be.
+
+Therefore, we will be resetting your user name to a default, automatically-generated one based on your unique numeric user ID.
+
+{optionalSuspensionAutoMessage}
+
+You may keep this default name, or you may choose a new one, if you like. However, please ensure that any name you choose is an appropriate way to represent yourself on this site, that it [does not use expletives](https://meta.stackexchange.com/questions/22232/) or other harsh language, and that it does not defame other users or groups. If you have any questions about this policy, or are unable to change your user name to something else that's reasonable, please let us know by replying to this message.`
+      },
+      {
+         description:  'excessive vote solicitation in comments',
+         reason:       'for promotional content',
+         defaultDays:  0,
+         insertBefore: 9,  // excessive discussion in comments
+         message:      `\
+It has come to our attention that you've been posting numerous comments asking other users for upvotes and/or accepts. This is not an appropriate use of comments.
+
+Quoting from the [comment privilege page](${parentUrl}/help/privileges/comment):
+
+> You should submit a comment if you want to:
+> * Request **clarification** from the author;
+> * Leave **constructive criticism** that guides the author in improving the post;
+> * Add relevant but **minor or transient information** to a post (e.g. a link to a related question, or an alert to the author that the question has been updated).
+
+**Please refrain from leaving comments urging users to vote on and/or accept answers in the future.** Such comments may be perceived as begging by other users. The system does have built-in contextual help that recommends new users accept an answer to their question at an appropriate time. Having the message come from the software itself, rather than a comment from a specific user, is preferable for several reasons:
+
+First, it reduces the amount of noise on the site, since the message is displayed only on that user's screen, not as content that every future viewer to the Q&A will see.
+
+Second, it eliminates the possibility that your comment comes across as pressuring the user into accepting and/or upvoting your post. The reality is, no matter how politely and neutrally you phrase the comment, if you have also posted an answer to the question, the receiving user is extremely likely to interpret that comment as pressuring them to accept your answer.
+
+In the best case, comments like these are merely noise, redundant with system-level notifications; in the worst case, they may be perceived as an attempt to pressure someone to do something that is, after all, completely optional.
+
+{optionalSuspensionAutoMessage}
+
+Thank you for your attention to this matter in the future.`
+      },
+      {
+         description:  'excessively trivial bumping edits',
+         reason:       'for rule violations',
+         defaultDays:  0,
+         insertBefore: 10,  // plagiarism
+         message:      `\
+You appear to be editing one or more of your posts merely to attract attention to it, rather than to improve it. Ongoing cosmetic edits are not constructive and needlessly "bump" your post, which displaces truly active posts that require more community attention.
+
+<!-- Consider linking to and referencing specific post(s) here. -->
+
+Please only edit your post to correct errors, include additional insights, and/or update for changing circumstances. If you continue to make trivial, cosmetic-only edits, we'll have to lock your post from all further edits.
+
+{optionalSuspensionAutoMessage}
+
+Thank you for your attention to this matter. We look forward to your improved contributions in the future.`
+      },
+      {
+         description:  'excessively minor suggested edits',
+         reason:       'for low-quality contributions',
+         defaultDays:  0,
+         insertBefore: 10,  // plagiarism
+         message:      `\
+It has come to our attention that your recent suggested edits have been excessively minor and have failed to substantively improve the post. Therefore, we wanted to clarify our expectations for suggested edits. As it says in the Help Center page, ["How does editing work?"](${parentUrl}/help/editing):
+
+> Edits are expected to be substantial and to leave the post better than you found it.
+
+Since suggested edits must be reviewed and approved by at least two other users, **we ask that users only make edits that substantially improve a post**. Try to fix *all* of the problems with the post, rather than just correcting/changing a single thing.
+
+<!-- Consider adding some specific examples and explanation here. -->
+
+In order to ensure that this message reaches you before you suggest any more edits, we have temporarily removed your ability to suggest edits for a few days. The privilege will be restored after a few days.
+
+{todo} <!-- Actually suspend the user from suggesting edits, then delete this paragraph. -->
+
+{optionalSuspensionAutoMessage}
+
+Thank you for your attention to this matter. We look forward to your improved contributions in the future.`
+      },
+      {
+         description:  'demanding to show effort/\"not a code-writing service\"',
+         reason:       'for rule violations',
+         defaultDays:  0,
+         insertBefore: 10,  // plagiarism
+         message:      `\
+We noticed that you have recently left several comments and/or close votes making claims similar to the following:
+
+> {todo}
+
+While we genuinely appreciate your efforts at curating and attempting to maintain the site's quality, we need to point out that [Stack Overflow *is* a code-writing service](https://meta.stackoverflow.com/a/408565) in a very literal sense. After all, it is a programming Q&A site, and most questions here are solved by writing code in the answer.
+
+[Our goal](${parentUrl}/tour) is to build a repository of knowledge, [*not* provide a debugging help-desk for askers](https://meta.stackexchange.com/a/364585). Thus, we do not require that askers provide existing code to debug. Lack of problem-solving effort is not a reason to close or otherwise object to "how-to" questions. [The only type of effort we require is the effort required to ask a clear, focused, non-duplicate question](https://meta.stackoverflow.com/a/260909). Including a failed attempt often adds noise and results in answers that are only applicable to the original asker, rather than being generally useful to anyone who is trying to accomplish the same task. Many of the most useful questions on the site do not include an existing attempt at solving the problem and would not be improved by adding one.
+
+Of course, Stack Overflow is *also not* a free application design and development service. Questions should still be closed as too broad (lacks focus) or unclear if they meet either of those criteria. But please do not try to limit the questions asked here to problems with *existing* code. Instead, focus on the scope and clarity of questions. The goal should be to encourage questions that might help the next person with the same problem.
+
+{optionalSuspensionAutoMessage}
+
+Please do not post any more comments of this type. They merely add noise, may be perceived as demanding or unfriendly, don't assist with our goal of creating a knowledge base, and waste moderators' time to remove.`
+      },
+      {
+         description:  'voting to close spam',
+         reason:       'for rule violations',
+         defaultDays:  0,
+         insertBefore: 10,  // plagiarism
+         message:      `\
+It has come to our attention that you recently voted to close one or more questions as spam. While we greatly appreciate your willingness to help us out with spam posts as you see them, voting to close spam is not very useful.
+
+**Instead of voting to close spam, you should [flag it as spam](${parentUrl}/help/privileges/flag-posts).** You'll find that option at the very top of the "Flag" dialog.
+
+Flagging as spam is much more expedient than voting to close, and it actually allows spam to be nuked from the site without even requiring intervention by a moderator.
+
+{optionalSuspensionAutoMessage}
+
+Thank you for your attention to this matter in the future. We look forward to handling your flags! If you have any questions, please let us know.`
+      },
+      {
+         description:  'unilateral tag burnination',
+         reason:       'for rule violations',
+         defaultDays:  7,
+         insertBefore: 10,  // plagiarism
+         message:      `\
+It has come to our attention that you have recently removed many tags from questions without following the burnination process.
+
+As you should be aware, there is [a process for mass tag removal](https://meta.stackoverflow.com/questions/324070), also known as "burnination". The [official policy from Stack Exchange](https://meta.stackoverflow.com/questions/356963) is that the process **must** be followed and that burninations of tags which are used on more than 50 questions **must** be discussed and agreed-upon on [Meta Stack Overflow](https://meta.stackoverflow.com) *prior* to beginning to edit to remove the tag.
+
+All of the edits you made will be reverted. Some of the edits may have included other beneficial changes, which you are welcome to re-apply, as appropriate. However, you are not permitted to systematically, single-handedly remove tags from questions without following the burnination process.
+
+{optionalSuspensionAutoMessage}
+
+If you do this again&mdash;with this or any other tag&mdash;then there will be further consequences.`
+      },
+      {
+         description:  'plagiarism in tag wikis',
+         reason:       'for plagiarism',
+         defaultDays:  0,
+         insertBefore: 10,  // plagiarism
+         message:      `\
+It has come to our attention that your recent tag wiki edits have consisted primarily or entirely of text copied from other websites. We prefer not to simply copy content already available elsewhere in lieu of [creating something that adds value to this site specifically](https://stackoverflow.blog/2011/03/24/redesigned-tags-page/), and, whenever possible, we prefer that content be your own original work.
+
+Content that is copy-pasted from a Wikipedia article and/or a product description/marketing website is useless in a tag wiki. Tag wikis are not meant to give an introduction to someone who has absolutely no idea about the concept that the tag refers to, and they certainly aren't meant to promote or sell something.
+
+If you do copy some content from elsewhere, please note that we [require full attribution](${parentUrl}/help/referencing), which consists of proper use of blockquote formatting to indicate all copied content, a link to the original source, and the name of the original author (if available).
+
+For more advice on how to write a good tag wiki, please read: [How do I write a good tag wiki? Is it okay to use/copy content published elsewhere?](https://meta.stackoverflow.com/q/318337)
+
+In order to ensure that this message reaches you before you edit any more tag wikis, we have temporarily removed your ability to suggest edits for a few days. The privilege will be restored after a few days.
+
+{todo} <!-- Actually suspend the user from suggesting edits, then delete this paragraph. Yes, you can still suspend the suggested-edit privileges for a user with full editing privileges who has not yet gained the ability to edit tag wikis; this will only remove their ability to suggest edits to tag wikis. If the user has achieved full "trusted user" status, you will need to suspend their account instead. -->
+
+{optionalSuspensionAutoMessage}
+
+Thank you for your attention to this matter. We look forward to your contributions in the future.`
+      },
+      {
+         description:  'ChatGPT-generated content',
+         reason:       'for low-quality contributions',
+         defaultDays:  7,
+         insertBefore: 11,  // something else
+         message:      `\
+**One or more of your recent posts appear to have been generated by and copied from ChatGPT.** The use of ChatGPT as a source for content on {siteName} is currently banned&mdash;please see [the announcement of this temporary policy on Meta Stack Overflow](https://meta.stackoverflow.com/q/421831). **You are not permitted to use ChatGPT to create content on {siteName} during this ban.**
+
+Among the problems that we have identified with the use of ChatGPT and other machine-generated content on {siteName}, which contributed to our decision to implement this blanket ban, are:
+
+1. **Plagiarism**, which is a failure to indicate and/or properly attribute work that is not your own, including (but not limited to) machine-generated text.
+
+    Our evaluation revealed that one or more of your posts contained text for which you were not the original author. This includes content that has been copy-pasted from the output of an AI generator such as ChatGPT. As a general rule, posts should be **your own** original work.
+
+    The current policy (derived from user consensus) is that even machine-generated text requires [attribution](${parentUrl}/help/referencing). See "[Is it acceptable to post answers generated by an AI, such as GitHub Copilot?](https://meta.stackoverflow.com/q/412696)" for more information.
+
+2. **Lack of regard for accuracy**
+
+    It is our experience that users who rapidly generate content from AIs, including ChatGPT, and then copy-and-paste that into posts on {siteName} are not sufficiently vetting that content for accuracy. This is leading to an influx of low-quality content on this site.
+
+    Using AI, or other tools, to generate a large quantity of answers without regard to if those answers are *correct and actually answer* the question on which they are posted is not acceptable. Relying solely on other users to judge the correctness of the answer&mdash;or even that the answer actually answers the question&mdash;is not permitted.
+
+    This type of content brings down the overall quality of the site. It is ***harmful*** to your fellow users, burdening them with having to wade through a substantial amount of low-quality answers. Furthermore, it is harmful to the authors of the questions to which the answers are posted, as the answers generated by ChatGPT often look superficially reasonable, requiring the asker to waste time trying to understand the answer, thinking that its author is an expert who actually knows what they are talking about, when in reality the answer doesn't really answer the question or is substantially incorrect.
+
+    Users come to {siteName} in order to get high-quality answers from subject-matter experts, not text that is generated by a machine without regard for its accuracy or relevance.
+
+    As some point in the future, using AI as a tool to assist in generating high-quality content *might* be reasonable. Currently, the policies for what, if any, use of AI or similar technologies will be acceptable as a *tool* to *assist you* in creating content, particularly answers, on {siteName} are currently in flux. The restrictions which were in place prior to the existence of ChatGPT were:
+
+    1. *You* confirm that what is posted as an answer *actually answers the question*;
+
+    2. *You* have sufficient expertise in the subject-matter of the question to be able to ensure that any answer you post is correct (as if you wrote it yourself); and
+
+    3. All content copied from such tools is explicitly indicated as not being your own original work, following [our standard referencing policy](${parentUrl}/help/referencing). This requires you to ensure that all text copied from elsewhere is explicitly indicated as a quote with the use of blockquote formatting and attributed to the machine/tool used to generate it.
+
+    We expect that whatever is decided upon as the final policy for using such tools will have *at least* the above requirements (and likely be even more stringent), perhaps prohibiting the use of such technologies altogether.
+
+Therefore, **some, many, or all of your posts have been deleted** because we believe they violated the rules cited above, and, in particular, our current blanket ban on the use of ChatGPT to generate content posted to this site.
+
+If you believe that we have made an error in assessing the source of a specific post, then you may raise an "in need of moderator intervention" flag on that post, providing a detailed explanation of the issue, any evidence you can offer in your defense, and requesting that the post be re-evaluated by another moderator. (You can find links to your deleted posts from your "[deleted questions](${parentUrl}/users/deleted-questions/current)" and your "[deleted answers](${parentUrl}/users/deleted-answers/current)" pages. Links to these pages listing your deleted posts can be found at the bottom of the [questions](${parentUrl}/users/current?tab=questions) and [answers](${parentUrl}/users/current?tab=answers) tabs, respectively, in your user profile.)
+
+In order to ensure that this message reaches you before you post anything else, {optionalSuspensionAutoMessage}
+
+Thank you for your compliance with these policies. We look forward your future contributions that do not involve the use of ChatGPT.`
+      },
+   ];
+
+   // -----------------------------------------------
+   // Helper/Utility Functions
+   // -----------------------------------------------
+
+   function copyAllJQueryEvents(source, destination)
+   {
+      $.each($._data(source.get(0), 'events'), function()
+      {
+         $.each(this, function()
+         {
+            destination.on(this.type, this.handler);
+         });
+      });
+   }
+
+   function attachElementInsertionHandler(containerSelector, elementSelector, callback)
    {
       const onMutationsObserved = function(mutations)
       {
@@ -75,6 +362,10 @@
       }
    }
 
+
+   // -----------------------------------------------
+   // on*PageLoad() Event Handler Functions
+   // -----------------------------------------------
 
    function onContactCmPageLoad()
    {
@@ -114,6 +405,7 @@
       }
    }
 
+
    function onUserMessagePageLoad()
    {
       // Prevent the page from automatically being scrolled to the bottom,
@@ -137,6 +429,7 @@
          $('#js-to-warning_noemail').toggleClass('hidden',  sendEmail);
       });
    }
+
 
    function onContactUserPageLoad()
    {
@@ -227,6 +520,17 @@
                // first portion of the template) for each of the options.
                $('.js-action-desc').hide();
 
+               // Add custom items.
+               customModMessages.forEach(function(item, index)
+               {
+                  insertSuspensionReason(-(index + 1),
+                                         item.description,
+                                         item.reason,
+                                         item.message,
+                                         Object.hasOwn(item, 'defaultDays') ? item.defaultDays : 0,
+                                         Object.hasOwn(item, 'insertBefore') ? item.insertBefore : 11);
+               });
+
                // Attach an event handler to the submit button's click event.
                aside.find('.js-popup-submit').on('click', function()
                {
@@ -247,6 +551,55 @@
                });
             }
          });
+      }
+   }
+
+   function insertSuspensionReason(id, description, reason, message, defaultDays = 0, insertBeforeId = 11)
+   {
+      let inputAfter = $(`input#template-${insertBeforeId}`);
+      if (!inputAfter || (inputAfter.length !== 1))
+      {
+         insertBeforeId = 11;
+         inputAfter = $(`input#template-${insertBeforeId}`);
+      }
+      const itemAfter = inputAfter?.parent()?.parent();
+      if (itemAfter && (itemAfter.length === 1))
+      {
+         const userId   = $('#js-about-user-id')[0]?.value;
+         const userUrl  = $(`#js-msg-form .user-details a[data-uid="${userId}"]`)[0]?.href;
+         const siteName = StackExchange.options.site.name;
+         const greeting = 'Hello,\n'
+                        + '\n'
+                        + `We\'re writing in reference to your ${siteName} account`
+                        + (userUrl ? `:\n\n${userUrl}` : '.')
+                        + '\n\n';
+         message = message.trim()
+                          .replaceAll('"', '&quot;')
+                          .replaceAll('{siteName}', siteName);
+         if (!message.includes('{optionalSuspensionAutoMessage}'))
+         {
+            message += '\n\n{optionalSuspensionAutoMessage}';
+         }
+
+         const itemNew = $('<li>'
+                          +  '<label>'
+                          +    `<input type="radio" id="template-${id}" name="mod-template"`
+                          +    ` value="${greeting}${message}">`
+                          +    `<input type="hidden" id="template-${id}-reason"`
+                          +    ` data-suspension-description="${reason}"`
+                          +    ` value="${reason}"`
+                          +    ` data-days="${defaultDays === 0 ? '' : defaultDays}">`
+                          +    ` `
+                          +    `<span class="js-action-name fw-bold">${description}</span>`
+                          +    '<span class="js-action-desc d-none" style="display: none;">'
+                          +  '</label>'
+                          +'</li>');
+         itemAfter.before(itemNew);
+         const inputNew = itemNew.find(`#template-${id}`);
+         if (inputNew && inputNew.length === 1)
+         {
+            copyAllJQueryEvents(inputAfter, inputNew);
+         }
       }
    }
 
@@ -275,9 +628,12 @@
       $('#cg-suspend-reason').toggle(suspend);
    }
 
+
    function onReviewPageLoad()
    {
-      onElementInserted('body.review-task-page .js-review-task .js-review-content', 'ul', function(element)
+      attachElementInsertionHandler('body.review-task-page .js-review-task .js-review-content',
+                                    'ul',
+                                    function(element)
       {
          $('a:contains("review suspended")').each(function()
          {
@@ -285,6 +641,7 @@
          });
       });
    }
+
 
    function onUserProfilePageLoad()
    {
@@ -334,6 +691,7 @@
          });
       });
    }
+
 
    function onPageLoad()
    {
@@ -417,7 +775,7 @@
 
       // When opening the "reopen" pop-up modal dialog, pre-select the default submit/OK button,
       // rather than the cancel button, in order to enable dismissal by typing Enter.
-      onElementInserted('body.question-page', '.s-modal--footer', function(element)
+      attachElementInsertionHandler('body.question-page', '.s-modal--footer', function(element)
       {
          const $this = $(element);
          $this.find('button.js-cancel-button.js-modal-close').removeClass('js-modal-initial-focus');
@@ -425,7 +783,7 @@
       });
 
       // When opening the "mod" menu, customize the lock options to allow more granular durations.
-      onElementInserted(document, '#se-mod-menu-action-lock-expandable', function(element)
+      attachElementInsertionHandler(document, '#se-mod-menu-action-lock-expandable', function(element)
       {
          document.getElementById('mod-menu-lock-duration').parentElement.remove();
          const duration      = element.querySelector('label[for="mod-menu-lock-duration"]');
@@ -499,6 +857,9 @@
       }
    }
 
+   // -----------------------------------------------
+   // Style Manipulation
+   // -----------------------------------------------
 
    function appendStyles()
    {
@@ -658,6 +1019,12 @@ body:is(.mod-page, .user-page) #content #mainbar > table.clear:not([id]) > tbody
 }
 
 /* Contact User: */
+#js-msg-form #modal-title {
+   margin-bottom: 3px;
+}
+#js-msg-form #modal-description li {
+   padding: 3px;
+}
 #js-msg-form .js-suspend-info {
    margin-top: 3px !important;
    margin-left: 18px;
@@ -695,9 +1062,4 @@ body:is(.mod-page, .user-page) #content #mainbar > table.clear:not([id]) > tbody
 `;
       $('body').append(styles);
    }
-
-
-   appendStyles();
-   onPageLoad();
-   window.addEventListener('load', onPageLoaded);
 })();
