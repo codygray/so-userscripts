@@ -3,7 +3,7 @@
 // @namespace    https://github.com/codygray/so-userscripts
 // @description  Miscellaneous improvements to the UX for the moderator flag dashboard.
 // @author       Cody Gray
-// @version      0.4.2
+// @version      0.4.3
 // @homepageURL  https://github.com/codygray/so-userscripts
 // @updateURL    https://github.com/codygray/so-userscripts/raw/master/FunWithFlags.user.js
 // @downloadURL  https://github.com/codygray/so-userscripts/raw/master/FunWithFlags.user.js
@@ -401,7 +401,7 @@ Thank you for your compliance with these policies. We look forward your future c
 
                // Attempt to find the pop-up dialog, which is inserted into the DOM after the link.
                const popup = link.next();
-               if ((popup.length == 1) && popup.hasClass('popup'))
+               if ((popup.length === 1) && popup.hasClass('popup'))
                {
                   // Remove the "popup" style (so that the dialog doesn't get hidden/dismissed when the user clicks
                   // elsewhere on the page, and also to remove some, but not all, inapplicable styles).
@@ -627,7 +627,7 @@ Thank you for your compliance with these policies. We look forward your future c
       if (suspend)
       {
          const days = $('#js-suspend-days').val();
-         button.text(`Notify and Suspend User for ${days} Day${(days != 1) ? 's' : ''}`);
+         button.text(`Notify and Suspend User for ${days} Day${(days !== 1) ? 's' : ''}`);
          button.removeClass('s-btn__primary');
          button.addClass('s-btn__danger s-btn__filled');
       }
@@ -707,86 +707,8 @@ Thank you for your compliance with these policies. We look forward your future c
    }
 
 
-   function onPageLoad()
+   function onPostPageLoad()
    {
-      // Apply page-specific customizations.
-      const path = window.location.pathname;
-      if (path.startsWith('/admin/cm-message/create/'))
-      {
-         onContactCmPageLoad();
-      }
-      if (path.startsWith('/users/message/'))
-      {
-         onUserMessagePageLoad();
-      }
-      if (path.startsWith('/users/message/create/'))
-      {
-         onContactUserPageLoad();
-      }
-      if (path.startsWith('/review/'))
-      {
-         onReviewPageLoad();
-      }
-      if (path.startsWith('/users/'))
-      {
-         onUserProfilePageLoad();
-      }
-
-      // Apply the "danger" class styling to all "decline" buttons
-      // (effectively making them red and visually distinct from "helpful" buttons).
-      // Note that we cannot merely add the "s-btn__danger" style to the list of styles, since some of the
-      // buttons are styled with "s-btn__link", which sets the color back to the default, and that always
-      // overrides the color set by the "s-btn__danger" style, due to the order of the style definitions.
-      // Sigh, Stacks has regressed web best practices by at least 10 years.
-      $('button[data-type="decline"]')
-         .addClass('s-btn__danger')
-         .css('color', 'var(--red-600)');
-
-      // Same thing for the "delete" and "decline" buttons for comment flags.
-      $('.js-comment-flag-options button.js-comment-delete')
-         .addClass('s-btn__danger')
-         .css('color', 'var(--red-600)');
-      $('.js-comment-flag-options button.js-dismiss-flags')
-         .addClass('s-btn__muted')
-         .css('color', 'var(--black-500)');
-
-      // Apply a distinct background to the actual flag text (the part typed by the user)
-      // to make it stand out better. This is done by identifying and making it stylable.
-      $('.js-flag-text').html((i, html) => html.replace(/^(.*) - </i, `<span class="cg-user-flag-text">$1</span> - <`));
-
-      // When multiple users have raised the same flag, they are listed in a comma-separated list.
-      // Break this list onto new lines at the commas, and indent each new line by a fixed amount.
-      // (The indented lines won't line up with anything above them, but they'll be obviously indented.)
-      $('.js-flagged-post .js-flag-text span.relativetime-clean').each(function()
-      {
-         const nextElem = this.nextSibling;
-         if (nextElem.nodeValue.trim() == ',')
-         {
-            $(nextElem).replaceWith(',<br>');
-            this.nextSibling.nextSibling.nextSibling.style.marginLeft = '32px';
-         }
-      });
-
-      // When opening the "decline" options, pre-select the default reason and focus the submit button.
-      $('.js-resolve-action[data-type="decline"]').click(function()
-      {
-         const flagOpts = $(this).closest('.js-post-flag-group, .js-post-flag-options');
-         setTimeout(() =>
-         {
-            const opt = flagOpts.find('input[name="dismiss-reason"][value="2"]:visible').get(0);
-            if (opt)
-            {
-               opt.click();
-            }
-
-            const btn = flagOpts.find('.js-submit-btn').get(0);
-            if (btn)
-            {
-               btn.focus();
-            }
-         }, 100);
-      });
-
       // When opening the "reopen" pop-up modal dialog, pre-select the default submit/OK button,
       // rather than the cancel button, in order to enable dismissal by typing Enter.
       attachElementInsertionHandler('body.question-page', '.s-modal--footer', function(element)
@@ -858,6 +780,94 @@ Thank you for your compliance with these policies. We look forward your future c
       const actualValue  = (isPermanent ? -1 : (numericValue * rangeValue));
       numeric.disabled   = isPermanent;
       document.getElementById('mod-menu-lock-duration').value = actualValue.toString();
+   }
+
+
+   function onPageLoad()
+   {
+      // Apply page-specific customizations.
+      const path = window.location.pathname;
+      if (path.startsWith('/admin/cm-message/create/'))
+      {
+         onContactCmPageLoad();
+      }
+      if (path.startsWith('/users/message/'))
+      {
+         onUserMessagePageLoad();
+      }
+      if (path.startsWith('/users/message/create/'))
+      {
+         onContactUserPageLoad();
+      }
+      if (path.startsWith('/review/'))
+      {
+         onReviewPageLoad();
+      }
+      if (path.startsWith('/users/'))
+      {
+         onUserProfilePageLoad();
+      }
+      if (path.startsWith('/questions/'))
+      {
+         onPostPageLoad();
+      }
+      if (path.startsWith('/admin/'))
+      {
+         // Apply a distinct background to the actual flag text (the part typed by the user)
+         // to make it stand out better. This is done by identifying and making it stylable.
+         $('.js-flag-text').html((i, html) => html.replace(/^(.*) - </i, `<span class="cg-user-flag-text">$1</span> - <`));
+
+         // When multiple users have raised the same flag, they are listed in a comma-separated list.
+         // Break this list onto new lines at the commas, and indent each new line by a fixed amount.
+         // (The indented lines won't line up with anything above them, but they'll be obviously indented.)
+         $('.js-flagged-post .js-flag-text span.relativetime-clean').each(function()
+         {
+            const nextElem = this.nextSibling;
+            if (nextElem.nodeValue.trim() === ',')
+            {
+               $(nextElem).replaceWith(',<br>');
+               this.nextSibling.nextSibling.nextSibling.style.marginLeft = '32px';
+            }
+         });
+      }
+
+      // Apply the "danger" class styling to all "decline" buttons
+      // (effectively making them red and visually distinct from "helpful" buttons).
+      // Note that we cannot merely add the "s-btn__danger" style to the list of styles, since some of the
+      // buttons are styled with "s-btn__link", which sets the color back to the default, and that always
+      // overrides the color set by the "s-btn__danger" style, due to the order of the style definitions.
+      // Sigh, Stacks has regressed web best practices by at least 10 years.
+      $('button[data-type="decline"]')
+         .addClass('s-btn__danger')
+         .css('color', 'var(--red-600)');
+
+      // Same thing for the "delete" and "decline" buttons for comment flags.
+      $('.js-comment-flag-options button.js-comment-delete')
+         .addClass('s-btn__danger')
+         .css('color', 'var(--red-600)');
+      $('.js-comment-flag-options button.js-dismiss-flags')
+         .addClass('s-btn__muted')
+         .css('color', 'var(--black-500)');
+
+      // When opening the "decline" options, pre-select the default reason and focus the submit button.
+      $('.js-resolve-action[data-type="decline"]').click(function()
+      {
+         const flagOpts = $(this).closest('.js-post-flag-group, .js-post-flag-options');
+         setTimeout(() =>
+         {
+            const opt = flagOpts.find('input[name="dismiss-reason"][value="2"]:visible').get(0);
+            if (opt)
+            {
+               opt.click();
+            }
+
+            const btn = flagOpts.find('.js-submit-btn').get(0);
+            if (btn)
+            {
+               btn.focus();
+            }
+         }, 100);
+      });
    }
 
 
