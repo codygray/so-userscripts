@@ -3,7 +3,7 @@
 // @namespace    https://github.com/codygray/so-userscripts
 // @description  Miscellaneous improvements to the UX for the moderator flag dashboard.
 // @author       Cody Gray
-// @version      0.4.3
+// @version      0.4.4
 // @homepageURL  https://github.com/codygray/so-userscripts
 // @updateURL    https://github.com/codygray/so-userscripts/raw/master/FunWithFlags.user.js
 // @downloadURL  https://github.com/codygray/so-userscripts/raw/master/FunWithFlags.user.js
@@ -149,6 +149,18 @@ Therefore, we will be resetting your user name to a default, automatically-gener
 {optionalSuspensionAutoMessage}
 
 You may keep this default name, or you may choose a new one, if you like. However, please ensure that any name you choose is an appropriate way to represent yourself on this site, that it [does not use expletives](https://meta.stackexchange.com/questions/22232/) or other harsh language, and that it does not defame other users or groups. If you have any questions about this policy, or are unable to change your user name to something else that's reasonable, please let us know by replying to this message.`
+      },
+      {
+         description:  'requesting contact off-site',
+         reason:       'for rule violations',
+         defaultDays:  0,
+         insertBefore: 8,  // excessive self-promotion
+         message:      `\
+It has come to our attention that one or more of your posts contained a request for users to contact you directly. We wanted to let you know that this is not allowed.
+
+Users on {siteName} are not permitted to request off-site contact for questions or answers. Taking a question and/or its resolution off-site runs counter to [{siteName}'s fundamental goal of building a repository of questions and answers](${parentUrl}/tour). If a question is resolved off-site, it does nothing for future visitors, who are the primary people that this site is intending to help. It is also not permitted to make requests for off-site contact for other purposes.
+
+Therefore, we have removed such requests, along with any contact details you may have shared, from your posts. Do not add them back in or make similar requests in future posts. If you would like to share personal contact information, you may do so by adding it to the "About me" section of your profile. However, you are still not permitted to request users to contact you off-site in order to resolve a question.`
       },
       {
          description:  'excessive vote solicitation in comments',
@@ -450,7 +462,8 @@ Thank you for your compliance with these policies. We look forward your future c
       // When the page has been fully loaded, we're going to automatically display the list of
       // templates inline (we can't do it here, because the "click()" doesn't work). To reduce
       // confusion, go ahead and hide the button here, though.
-      $('button.js-load-modal').hide();
+      // BUG: Sometimes, the auto-click doesn't work, so hiding the button is not tenable.
+      //$('button.js-load-modal').hide();
 
       // Make the hidden "template-name" input parameter visible as a textbox.
       const nameInput = $('#js-template-name');
