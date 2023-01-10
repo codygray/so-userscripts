@@ -3,7 +3,7 @@
 // @namespace    https://github.com/codygray/so-userscripts
 // @description  Miscellaneous improvements to the UX for the moderator flag dashboard.
 // @author       Cody Gray
-// @version      0.4.4
+// @version      0.4.5
 // @homepageURL  https://github.com/codygray/so-userscripts
 // @updateURL    https://github.com/codygray/so-userscripts/raw/master/FunWithFlags.user.js
 // @downloadURL  https://github.com/codygray/so-userscripts/raw/master/FunWithFlags.user.js
@@ -343,7 +343,7 @@ If you believe that we have made an error in assessing the source of a specific 
 
 In order to ensure that this message reaches you before you post anything else, {optionalSuspensionAutoMessage}
 
-Thank you for your compliance with these policies. We look forward your future contributions that do not involve the use of ChatGPT.`
+Thank you for your compliance with these policies. We look forward to your future contributions that do not involve the use of ChatGPT.`
       },
    ];
 
