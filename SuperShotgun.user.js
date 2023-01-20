@@ -2,7 +2,7 @@
 // @name         Super Shotgun
 // @description  Facilitates immediate, hassle-free removal of inappropriate questions by a moderator.
 // @author       Cody Gray
-// @version      1.1
+// @version      1.2
 // @homepageURL  https://github.com/codygray/so-userscripts
 // @updateURL    https://github.com/codygray/so-userscripts/raw/master/SuperShotgun.user.js
 // @downloadURL  https://github.com/codygray/so-userscripts/raw/master/SuperShotgun.user.js
@@ -27,11 +27,12 @@
 (function() {
    'use strict';
 
-   const IS_META = (typeof StackExchange.options.site.parentUrl !== 'undefined');
-   const IS_SO   = location.hostname === 'stackoverflow.com';
-   const IS_MSO  = location.hostname === 'meta.stackoverflow.com' && IS_META;
-   const IS_MOD  = StackExchange.options.user.isModerator;
-   const FKEY    = StackExchange.options.user.fkey;
+   const IS_CHILD_META = (typeof StackExchange.options.site.parentUrl !== 'undefined');
+   const IS_SO         = location.hostname === 'stackoverflow.com';
+   const IS_MSO        = location.hostname === 'meta.stackoverflow.com';
+   const IS_MSE        = location.hostname === 'meta.stackexchange.com';
+   const IS_MOD        = StackExchange.options.user.isModerator;
+   const FKEY          = StackExchange.options.user.fkey;
 
    if ((typeof StackExchange === 'undefined') || !FKEY)  { return; }
 
@@ -138,8 +139,7 @@
          throw new Error('The required "duplicateID" parameter is missing.');
       }
 
-      console.log(`%c Closing question #${questionID} as ${closeReason}, reason ${siteSpecificReason} (${siteSpecificOtherText}).`,
-                  'font-weight: bold');
+      console.trace(`Closing question #${questionID} as ${closeReason}, reason ${siteSpecificReason} (${siteSpecificOtherText}).`);
 
       await Promise.resolve($.post({
                                      url:  `${location.origin}/flags/questions/${questionID}/close/add`,
@@ -200,12 +200,9 @@
 
             await downvotePost(questionID);
 
-            if (IS_MOD)
-            {
-               await deletePost(questionID);
-            }
+            await deletePost(questionID);
 
-            await reloadPage(questionID);
+            await reloadPage();
 
             return true;
          }
@@ -223,10 +220,13 @@
 
    function insertNukeButtons()
    {
-      const qid = $('.question').data('questionid');
       const qh  = $('#question-header + .d-flex').first();
       if (qh.length > 0)
       {
+         const q         = $('.question');
+         const qid       = q.data('questionid');
+         const isDeleted = q.hasClass('deleted-answer');
+
          qh.find('.flex--item:last-child').addClass('mr16');
 
          function makeNukeBtn(caption, tooltip, reason, reasonID = null, reasonText = null)
@@ -237,10 +237,12 @@
                        data-reason="${reason}"
                        ${reasonID   ? `data-reasonid="${reasonID}"`     : ''}
                        ${reasonText ? `data-reasontext="${reasonText}"` : ''}
+                       ${isDeleted  ? 'disabled="disabled"'             : ''}
                     >${caption}</a>`;
-        }
+         }
 
-         let nukeActionsHtml = '<div class="flex--item ws-nowrap mb8" id="nuke-actions"><span class="fc-light mr2">Nuke As:&nbsp;</span>';
+         let nukeActionsHtml = '<div class="flex--item ws-nowrap mb8" id="nuke-actions">';
+         nukeActionsHtml    += '<span class="fc-light mr2">Nuke As:&nbsp;</span>';
          if (IS_SO)
          {
             nukeActionsHtml += makeNukeBtn('Not Prog',
@@ -276,21 +278,40 @@
                                            'SiteSpecific',
                                            '5');
          }
-         nukeActionsHtml += makeNukeBtn('Unclear',
-                                        'Unclear or requires additional details',
-                                        'NeedsDetailsOrClarity');
-         nukeActionsHtml += makeNukeBtn('Too Broad',
-                                        'Not a specific problem with enough detail to identify an adequate answer',
-                                        'NeedMoreFocus');
-         nukeActionsHtml += makeNukeBtn('Opinion',
-                                        'Primarily opinion-based',
-                                        'OpinionBased');
-         nukeActionsHtml += makeNukeBtn('Not English',
-                                        'Not written in English',
-                                        'SiteSpecific',
-                                        IS_SO ? '19' : '3',
-                                        IS_SO ? null : `This question is not written in English, and therefore does not meet the minimum requirements for ${StackExchange?.options?.site?.name ?? 'this site'}. All posts on this site are [required to be in English](https://meta.stackexchange.com/questions/13676/).`);
-         nukeActionsHtml += '</div>';
+         if (IS_MSE)
+         {
+            nukeActionsHtml += makeNukeBtn('Not SE',
+                                           'Not about the software that powers the Stack Exchange network',
+                                           'SiteSpecific',
+                                           '8');
+            nukeActionsHtml += makeNukeBtn('Site-Specific',
+                                           'Relates to only one specific Stack Exchange site',
+                                           'SiteSpecific',
+                                           '11');
+            nukeActionsHtml += makeNukeBtn('Not Constructive',
+                                           'Does not appear to seek input and discussion from the community',
+                                           'SiteSpecific',
+                                           '5');
+            nukeActionsHtml += makeNukeBtn('No Repro',
+                                           'Rendered obsolete by changes to the system or circumstances',
+                                           'SiteSpecific',
+                                           '6');
+         }
+         nukeActionsHtml    += makeNukeBtn('Unclear',
+                                           'Unclear or requires additional details',
+                                           'NeedsDetailsOrClarity');
+         nukeActionsHtml    += makeNukeBtn('Too Broad',
+                                           'Not a specific problem with enough detail to identify an adequate answer',
+                                           'NeedMoreFocus');
+         nukeActionsHtml    += makeNukeBtn('Opinion',
+                                           'Primarily opinion-based',
+                                           'OpinionBased');
+         nukeActionsHtml    += makeNukeBtn('Not English',
+                                           'Not written in English',
+                                           'SiteSpecific',
+                                           IS_SO ? '19' : '3',
+                                           IS_SO ? null : `This question is not written in English, and therefore does not meet the minimum requirements for ${StackExchange?.options?.site?.name ?? 'this site'}. All posts on this site are [required to be in English](https://meta.stackexchange.com/questions/13676/).`);
+         nukeActionsHtml    += '</div>';
 
          const nukeActions = $(nukeActionsHtml);
          nukeActions.appendTo(qh)
