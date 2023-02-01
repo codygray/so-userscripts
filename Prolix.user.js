@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Prolix
 // @description  Improve site UX for particularly long-winded users and their allies.
-// @version      0.6.4
+// @version      0.6.5
 // @author       Cody Gray
 // @homepage     https://github.com/codygray/so-userscripts
 // @namespace    https://github.com/codygray/so-userscripts/
@@ -73,7 +73,7 @@
          resizeCommentTextarea(textarea);
          textarea.addEventListener('input', () =>
          {
-            resizeCommentTextarea(this);
+            resizeCommentTextarea(textarea);
          });
       });
    }
@@ -145,36 +145,10 @@ body .answer-hyperlink:visited,
 
 /* POST QUICK-LINKS: */
 
-/* Make the quick-links underneath posts appear in lowercase, as God intended. */
-.js-post-menu .s-anchors > .flex--item > *
-{
-   text-transform: lowercase;
-}
-/* But prevent the lowercase style from affecting other things. */
-.js-post-menu .s-anchors > .flex--item > * > *
-{
-   text-transform: initial;
-}
-
-/* Allow hiding individual links. */
-.js-post-menu .s-anchors > .flex--item
-{
-   margin: 0;
-}
-.js-post-menu .s-anchors > .flex--item button,
-.js-post-menu .s-anchors > .flex--item a
-{
-   margin: 4px;
-}
-.js-post-menu .s-anchors > .flex--item a
-{
-   display: block;
-}
-
 /* Hide the "follow" link. */
 .js-post-menu .s-anchors > .flex--item .js-follow-post
 {
-   //display: none;
+   display: none;
 }
 
 
