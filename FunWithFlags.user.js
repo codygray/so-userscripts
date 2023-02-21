@@ -3,7 +3,7 @@
 // @namespace    https://github.com/codygray/so-userscripts
 // @description  Miscellaneous improvements to the UX for the moderator flag dashboard.
 // @author       Cody Gray
-// @version      0.4.5
+// @version      0.4.6
 // @homepageURL  https://github.com/codygray/so-userscripts
 // @updateURL    https://github.com/codygray/so-userscripts/raw/master/FunWithFlags.user.js
 // @downloadURL  https://github.com/codygray/so-userscripts/raw/master/FunWithFlags.user.js
@@ -148,7 +148,7 @@ Therefore, we will be resetting your user name to a default, automatically-gener
 
 {optionalSuspensionAutoMessage}
 
-You may keep this default name, or you may choose a new one, if you like. However, please ensure that any name you choose is an appropriate way to represent yourself on this site, that it [does not use expletives](https://meta.stackexchange.com/questions/22232/) or other harsh language, and that it does not defame other users or groups. If you have any questions about this policy, or are unable to change your user name to something else that's reasonable, please let us know by replying to this message.`
+You may keep this default name, or you may choose a new one, if you like. However, please ensure that any name you choose is an appropriate way to represent yourself on this site, that it [does not use expletives](https://meta.stackexchange.com/questions/22232/) or other harsh language, and that it does not defame other users or groups. If you have any questions about this policy, and/or need help changing your user name, please let us know by replying to this message.`
       },
       {
          description:  'requesting contact off-site',
